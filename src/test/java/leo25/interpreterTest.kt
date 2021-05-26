@@ -218,6 +218,19 @@ class InterpreterTest {
 	}
 
 	@Test
+	fun letBe() {
+		script(
+			letName lineTo script(
+				"name" lineTo script(),
+				beName lineTo script(literal("foo"))
+			),
+			"name" lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(literal("foo")))
+	}
+
+	@Test
 	fun letName() {
 		script(
 			letName lineTo script(

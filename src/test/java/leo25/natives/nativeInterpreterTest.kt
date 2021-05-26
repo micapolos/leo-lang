@@ -108,6 +108,59 @@ class NativeInterpreterTest {
 	}
 
 	@Test
+	fun javaClassField() {
+		script(
+			line(literal("java.lang.Integer")),
+			nameName lineTo script(),
+			className lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script(),
+			className lineTo script(),
+			fieldName lineTo script(
+				nameName lineTo script(literal("TYPE"))
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					fieldName lineTo script(
+						javaName lineTo script(
+							objectName lineTo native(
+								Integer::class.java.getField("TYPE")
+							)
+						)
+					)
+				)
+			)
+	}
+
+	@Test
+	fun javaFieldGet() {
+		script(
+			line(literal("java.lang.Integer")),
+			nameName lineTo script(),
+			className lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script(),
+			className lineTo script(),
+			fieldName lineTo script(
+				nameName lineTo script(literal("TYPE"))
+			),
+			getName lineTo script(line(nullName), line(objectName), line(javaName))
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					javaName lineTo script(
+						objectName lineTo native(
+							Integer::class.java.getField("TYPE").get(null)
+						)
+					)
+				)
+			)
+	}
+
+	@Test
 	fun classJavaObjectMethod() {
 		script(
 			line(literal("java.lang.String")),

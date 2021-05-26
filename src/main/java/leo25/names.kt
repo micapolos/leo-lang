@@ -3,6 +3,7 @@ package leo25
 val appendName = "append"
 val anyName = "any"
 val asName = "as"
+val beName = "be"
 val becomeName = "become"
 val causeName = "cause"
 val commentName = "comment"

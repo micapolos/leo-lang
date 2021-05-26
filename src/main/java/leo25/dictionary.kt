@@ -213,16 +213,27 @@ fun Dictionary.plusRecurse(script: Script): Dictionary =
 
 fun Dictionary.definitionSeqOrNullLeo(scriptField: ScriptField): Leo<Seq<Definition>?> =
 	when (scriptField.string) {
-		"let" -> letDefinitionOrNull(scriptField.rhs)?.let { seq(it) }.leo
+		"let" -> letDefinitionOrNull(scriptField.rhs).nullableMap { seq(it) }
 		"set" -> setDefinitionSeqLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
-fun Dictionary.letDefinitionOrNull(rhs: Script): Definition? =
+fun Dictionary.letDefinitionOrNull(rhs: Script): Leo<Definition?> =
+	null
+		?: letDoDefinitionOrNull(rhs)?.leo
+		?: letBeDefinitionOrNull(rhs)
+
+fun Dictionary.letDoDefinitionOrNull(rhs: Script): Definition? =
 	rhs.matchInfix(doName) { lhs, rhs ->
 		definition(pattern(lhs), binding(function(body(rhs))))
 	}
 
+fun Dictionary.letBeDefinitionOrNull(rhs: Script): Leo<Definition?> =
+	rhs.matchInfix(beName) { lhs, rhs ->
+		valueLeo(rhs).bind { value ->
+			definition(pattern(lhs), binding(value)).leo
+		}
+	} ?: leo(null)
 
 fun Dictionary.setDefinitionSeqLeo(rhs: Script): Leo<Seq<Definition>> =
 	valueLeo(rhs).map { value ->

@@ -5,6 +5,7 @@ import leo14.Number
 import leo14.untyped.typed.loadClass
 import leo15.arrayName
 import leo25.*
+import java.lang.reflect.Field
 
 val nullObjectJavaDefinition
 	get() =
@@ -149,6 +150,77 @@ val textClassJavaDefinition
 								.nativeValue(textName)
 								.nativeText
 								.loadClass
+						)
+					)
+				)
+			)
+		}
+
+val javaClassFieldDefinition
+	get() =
+		nativeDefinition(
+			script(
+				className lineTo script(
+					javaName lineTo script(
+						objectName lineTo script(anyName)
+					)
+				),
+				fieldName lineTo script(
+					nameName lineTo script(
+						textName lineTo script(anyName)
+					)
+				)
+			)
+		) {
+			value(
+				fieldName fieldTo value(
+					javaName fieldTo value(
+						objectName fieldTo rhs(
+							native(
+								this
+									.nativeValue(className)
+									.nativeValue(javaName)
+									.nativeValue(objectName)
+									.nativeClass
+									.getField(
+										this
+											.nativeValue(fieldName)
+											.nativeValue(nameName)
+											.nativeValue(textName)
+											.nativeText
+									)
+							)
+						)
+					)
+				)
+			)
+		}
+
+val javaFieldGetDefinition
+	get() =
+		nativeDefinition(
+			script(
+				fieldName lineTo script(javaName lineTo script(objectName lineTo script(anyName))),
+				getName lineTo script(javaName lineTo script(objectName lineTo script(anyName)))
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					objectName fieldTo rhs(
+						native(
+							this
+								.nativeValue(fieldName)
+								.nativeValue(javaName)
+								.nativeValue(objectName)
+								.nativeObject
+								.run { this as Field }
+								.get(
+									this
+										.nativeValue(getName)
+										.nativeValue(javaName)
+										.nativeValue(objectName)
+										.nativeObject
+								)
 						)
 					)
 				)
