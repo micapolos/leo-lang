@@ -135,14 +135,28 @@ val textClassJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				className lineTo script(textName lineTo script(anyName)),
+				objectName lineTo script(
+					className lineTo script(
+						nameName lineTo script(
+							textName lineTo script(anyName)
+						)
+					)
+				),
 				javaName lineTo script()
 			)
 		) {
 			value(
 				javaName fieldTo value(
-					className fieldTo rhs(
-						native(nativeValue(className).nativeValue(textName).nativeText.loadClass)
+					objectName fieldTo rhs(
+						native(
+							this
+								.nativeValue(objectName)
+								.nativeValue(className)
+								.nativeValue(nameName)
+								.nativeValue(textName)
+								.nativeText
+								.loadClass
+						)
 					)
 				)
 			)
@@ -152,21 +166,48 @@ val javaClassMethodNameTextDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(className lineTo script(anyName)),
-				methodName lineTo script(textName lineTo script(anyName))
+				className lineTo script(
+					javaName lineTo script(
+						objectName lineTo script(anyName)
+					)
+				),
+				methodName lineTo script(
+					nameName lineTo script(
+						textName lineTo script(anyName)
+					),
+					typesName lineTo script(
+						javaName lineTo script(
+							objectName lineTo script(anyName)
+						)
+					)
+				)
 			)
 		) {
 			value(
 				javaName fieldTo value(
 					methodName fieldTo rhs(
 						native(
-							nativeValue(javaName).nativeValue(className).nativeClass.getMethod(
-								nativeValue(methodName).nativeValue(textName).nativeText
-							)
-						)
-					)
-				)
-			)
+							this
+								.nativeValue(className)
+								.nativeValue(javaName)
+								.nativeValue(objectName)
+								.nativeClass
+								.getMethod(
+									this
+										.nativeValue(methodName)
+										.nativeValue(nameName)
+										.nativeValue(textName)
+										.nativeText,
+									*this
+										.nativeValue(methodName)
+										.nativeValue(typesName)
+										.nativeValue(javaName)
+										.nativeValue(objectName)
+										.nativeObject
+										.run { this as Array<*> }
+										.toList()
+										.run { this as List<Class<*>> }
+										.toTypedArray())))))
 		}
 
 val javaObjectInvokeJavaMethodDefinition
@@ -184,11 +225,23 @@ val javaObjectInvokeJavaMethodDefinition
 				javaName fieldTo value(
 					objectName fieldTo rhs(
 						native(
-							nativeValue(invokeName).nativeValue(javaName).nativeValue(methodName).nativeMethod.invoke(
-								nativeValue(javaName).nativeValue(objectName).nativeObject,
-								*nativeValue(invokeName).nativeValue(argsName).nativeValue(javaName)
-									.nativeValue(objectName).nativeObject as Array<*>
-							)
+							this
+								.nativeValue(invokeName)
+								.nativeValue(javaName)
+								.nativeValue(methodName)
+								.nativeMethod
+								.invoke(
+									this
+										.nativeValue(javaName)
+										.nativeValue(objectName)
+										.nativeObject,
+									*this
+										.nativeValue(invokeName)
+										.nativeValue(argsName)
+										.nativeValue(javaName)
+										.nativeValue(objectName)
+										.nativeObject as Array<*>
+								)
 						)
 					)
 				)

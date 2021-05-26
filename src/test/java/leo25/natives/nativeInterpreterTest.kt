@@ -82,23 +82,33 @@ class NativeInterpreterTest {
 	}
 
 	@Test
-	fun textClassJava() {
+	fun textNameClassObjectJava() {
 		script(
 			line(literal("java.lang.String")),
+			nameName lineTo script(),
 			className lineTo script(),
+			objectName lineTo script(),
 			javaName lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script(javaName lineTo script(className lineTo native(String::class.java))))
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native(String::class.java))))
 	}
 
 	@Test
-	fun javaClassMethod() {
+	fun classJavaObjectMethod() {
 		script(
 			line(literal("java.lang.String")),
+			nameName lineTo script(),
 			className lineTo script(),
+			objectName lineTo script(),
 			javaName lineTo script(),
-			methodName lineTo script(literal("length"))
+			className lineTo script(),
+			methodName lineTo script(
+				nameName lineTo script(literal("length")),
+				typesName lineTo script(
+					line(arrayName), line(objectName), line(javaName)
+				)
+			)
 		)
 			.interpret
 			.assertEqualTo(
@@ -118,9 +128,17 @@ class NativeInterpreterTest {
 			javaName lineTo script(),
 			invokeName lineTo script(
 				line(literal("java.lang.String")),
+				nameName lineTo script(),
 				className lineTo script(),
+				objectName lineTo script(),
 				javaName lineTo script(),
-				methodName lineTo script(literal("length")),
+				className lineTo script(),
+				methodName lineTo script(
+					nameName lineTo script(literal("length")),
+					typesName lineTo script(
+						line(arrayName), line(objectName), line(javaName)
+					)
+				),
 				argsName lineTo script(line(arrayName), line(objectName), line(javaName))
 			)
 		)
