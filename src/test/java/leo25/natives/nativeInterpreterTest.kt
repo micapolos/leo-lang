@@ -113,8 +113,10 @@ class NativeInterpreterTest {
 			.interpret
 			.assertEqualTo(
 				script(
-					javaName lineTo script(
-						methodName lineTo native(String::class.java.getMethod("length"))
+					methodName lineTo script(
+						javaName lineTo script(
+							objectName lineTo native(String::class.java.getMethod("length"))
+						)
 					)
 				)
 			)

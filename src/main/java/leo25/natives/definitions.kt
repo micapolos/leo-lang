@@ -184,30 +184,31 @@ val javaClassMethodNameTextDefinition
 			)
 		) {
 			value(
-				javaName fieldTo value(
-					methodName fieldTo rhs(
-						native(
-							this
-								.nativeValue(className)
-								.nativeValue(javaName)
-								.nativeValue(objectName)
-								.nativeClass
-								.getMethod(
-									this
-										.nativeValue(methodName)
-										.nativeValue(nameName)
-										.nativeValue(textName)
-										.nativeText,
-									*this
-										.nativeValue(methodName)
-										.nativeValue(typesName)
-										.nativeValue(javaName)
-										.nativeValue(objectName)
-										.nativeObject
-										.run { this as Array<*> }
-										.toList()
-										.run { this as List<Class<*>> }
-										.toTypedArray())))))
+				methodName fieldTo value(
+					javaName fieldTo value(
+						objectName fieldTo rhs(
+							native(
+								this
+									.nativeValue(className)
+									.nativeValue(javaName)
+									.nativeValue(objectName)
+									.nativeClass
+									.getMethod(
+										this
+											.nativeValue(methodName)
+											.nativeValue(nameName)
+											.nativeValue(textName)
+											.nativeText,
+										*this
+											.nativeValue(methodName)
+											.nativeValue(typesName)
+											.nativeValue(javaName)
+											.nativeValue(objectName)
+											.nativeObject
+											.run { this as Array<*> }
+											.toList()
+											.run { this as List<Class<*>> }
+											.toTypedArray()))))))
 		}
 
 val javaObjectInvokeJavaMethodDefinition
@@ -216,7 +217,7 @@ val javaObjectInvokeJavaMethodDefinition
 			script(
 				javaName lineTo script(objectName lineTo script(anyName)),
 				invokeName lineTo script(
-					javaName lineTo script(methodName lineTo script(anyName)),
+					methodName lineTo script(javaName lineTo script(objectName lineTo script(anyName))),
 					argsName lineTo script(javaName lineTo script(objectName lineTo script(anyName)))
 				)
 			)
@@ -227,8 +228,9 @@ val javaObjectInvokeJavaMethodDefinition
 						native(
 							this
 								.nativeValue(invokeName)
-								.nativeValue(javaName)
 								.nativeValue(methodName)
+								.nativeValue(javaName)
+								.nativeValue(objectName)
 								.nativeMethod
 								.invoke(
 									this
