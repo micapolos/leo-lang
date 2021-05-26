@@ -12,6 +12,7 @@ fun Value.nativeValue(name: String): Value =
 
 val Value.nativeText: String get() = textOrThrow
 val Value.nativeNumber: Number get() = numberOrThrow
+val Value.nativeClass: Class<*> get() = fieldOrNull!!.rhs.nativeOrNull!!.any as Class<*>
 
 val String.nativeValue get() = value(field(literal(this)))
 val Number.nativeValue get() = value(field(literal(this)))

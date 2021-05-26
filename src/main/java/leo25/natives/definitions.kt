@@ -66,3 +66,24 @@ val textClassJavaDefinition
 				)
 			)
 		}
+
+val javaClassMethodNameTextDefinition
+	get() =
+		nativeDefinition(
+			script(
+				javaName lineTo script(className lineTo script(anyName)),
+				methodName lineTo script(textName lineTo script(anyName))
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					methodName fieldTo rhs(
+						native(
+							nativeValue(javaName).nativeValue(className).nativeClass.getMethod(
+								nativeValue(methodName).nativeValue(textName).nativeText
+							)
+						)
+					)
+				)
+			)
+		}
