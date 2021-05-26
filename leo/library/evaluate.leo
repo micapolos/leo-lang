@@ -1,6 +1,4 @@
 test
-  script
-    "Hello, "
-    append "world!"
+  script red.color
   evaluate
-  equals "Hello, world!"
+  equals script color red

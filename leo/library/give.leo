@@ -1,9 +1,7 @@
 test
-  doing
-    text
-    append "world!"
-  give "Hello, "
-  equals "Hello, world!"
+  doing text.ok
+  give "Hello, world!"
+  equals ok "Hello, world!"
 
 test
   try
