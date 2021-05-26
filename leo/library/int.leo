@@ -1,5 +1,3 @@
-comment native int type
-
 private
   let
     integer.class

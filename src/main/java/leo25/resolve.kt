@@ -15,7 +15,7 @@ fun Dictionary.resolveLeo(value: Value): Leo<Value> =
 fun Dictionary.applyOrNullLeo(value: Value): Leo<Value?> =
 	resolutionOrNull(value)?.bindingOrNull?.applyLeo(value) ?: leo(null)
 
-fun Dictionary.resolutionOrNull(token: Token): Resolution? =
+inline fun Dictionary.resolutionOrNull(token: Token): Resolution? =
 	tokenToResolutionMap[token]
 
 fun Dictionary.resolutionOrNull(value: Value): Resolution? =
@@ -23,39 +23,39 @@ fun Dictionary.resolutionOrNull(value: Value): Resolution? =
 		?: concreteResolutionOrNull(value)
 		?: resolutionOrNull(token(anyEnd))
 
-fun Dictionary.concreteResolutionOrNull(value: Value): Resolution? =
+inline fun Dictionary.concreteResolutionOrNull(value: Value): Resolution? =
 	when (value) {
 		is EmptyValue -> resolutionOrNull(token(emptyEnd))
 		is LinkValue -> resolutionOrNull(value.link)
 	}
 
-fun Dictionary.resolutionOrNull(link: Link): Resolution? =
+inline fun Dictionary.resolutionOrNull(link: Link): Resolution? =
 	orNull
 		?.resolutionOrNull(link.field)
 		?.dictionaryOrNull
 		?.resolutionOrNull(link.value)
 
-fun Dictionary.resolutionOrNull(function: Function): Resolution? =
+inline fun Dictionary.resolutionOrNull(function: Function): Resolution? =
 	null
 
-fun Dictionary.resolutionOrNull(field: Field): Resolution? =
+inline fun Dictionary.resolutionOrNull(field: Field): Resolution? =
 	orNull
 		?.resolutionOrNull(token(begin(field.name)))
 		?.dictionaryOrNull
 		?.resolutionOrNull(field.rhs)
 
-fun Dictionary.resolutionOrNull(rhs: Rhs): Resolution? =
+inline fun Dictionary.resolutionOrNull(rhs: Rhs): Resolution? =
 	when (rhs) {
 		is ValueRhs -> resolutionOrNull(rhs.value)
 		is FunctionRhs -> resolutionOrNull(rhs.function)
 		is NativeRhs -> resolutionOrNull(rhs.native)
 	} ?: resolutionOrNull(token(anyEnd))
 
-fun Dictionary.resolutionOrNull(native: Native): Resolution? =
+inline fun Dictionary.resolutionOrNull(native: Native): Resolution? =
 	resolutionOrNull(token(native))
 
-val Resolution.dictionaryOrNull get() = (this as? ResolverResolution)?.dictionary
-val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
+inline val Resolution.dictionaryOrNull get() = (this as? ResolverResolution)?.dictionary
+inline val Resolution.bindingOrNull get() = (this as? BindingResolution)?.binding
 
 fun Dictionary.set(value: Value): Dictionary =
 	fold(value.fieldSeq.reverse) { set(it) }

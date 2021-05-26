@@ -40,7 +40,7 @@ val anyEnd: End = AnythingEnd
 fun resolution(dictionary: Dictionary): Resolution = ResolverResolution(dictionary)
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
 
-fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionary =
+inline fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionary =
 	fn(tokenToResolutionMap[token]).let { resolutionOrNull ->
 		Dictionary(
 			if (resolutionOrNull == null) tokenToResolutionMap.remove(token)
@@ -48,7 +48,7 @@ fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionar
 		)
 	}
 
-fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Resolution): Dictionary =
 	update(token) { resolutionOrNull ->
 		resolutionOrNull?.continuationDictionary.orIfNull { dictionary() }.fn()
 	}
@@ -81,44 +81,41 @@ fun Dictionary.update(script: Script, fn: Dictionary.() -> Resolution): Dictiona
 		?: updateAnyOrNull(script, fn)
 		?: updateExact(script, fn)
 
-fun Dictionary.updateExact(script: Script, fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.updateExact(script: Script, noinline fn: Dictionary.() -> Resolution): Dictionary =
 	when (script) {
 		is UnitScript -> updateContinuation(token(emptyEnd), fn)
 		is LinkScript -> update(script.link, fn)
 	}
 
-fun Dictionary.update(link: ScriptLink, fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.update(link: ScriptLink, noinline fn: Dictionary.() -> Resolution): Dictionary =
 	update(link.line) {
 		resolution(
 			update(link.lhs, fn)
 		)
 	}
 
-fun Dictionary.update(line: ScriptLine, fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.update(line: ScriptLine, noinline fn: Dictionary.() -> Resolution): Dictionary =
 	when (line) {
 		is FieldScriptLine -> update(line.field, fn)
 		is LiteralScriptLine -> update(line.literal, fn)
 	}
 
-fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.update(literal: Literal, fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(literal.selectName))) {
 		resolution(updateContinuation(token(literal.native), fn))
-//		) {
-//			resolution(updateContinuation(token(emptyEnd), fn))
-//		})
 	}
 
-fun Dictionary.updateAnyOrNull(script: Script, fn: Dictionary.() -> Resolution): Dictionary? =
+inline fun Dictionary.updateAnyOrNull(script: Script, fn: Dictionary.() -> Resolution): Dictionary? =
 	notNullIf(script == script(anyName)) {
 		updateAny(fn)
 	}
 
-fun Dictionary.update(field: ScriptField, fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.update(field: ScriptField, noinline fn: Dictionary.() -> Resolution): Dictionary =
 	updateContinuation(token(begin(field.string))) {
 		resolution(update(field.rhs, fn))
 	}
 
-fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
+inline fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
 	removeForAny.updateContinuation(token(anyEnd), fn)
 
 operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =

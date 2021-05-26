@@ -11,10 +11,10 @@ val <T> Leo<T>.get: T
 	get() =
 		run(environment()).value
 
-fun <V> leo(value: V) =
+inline fun <V> leo(value: V) =
 	Leo { map -> map effect value }
 
-val <V> V.leo get() = Leo { map -> map effect this }
+inline val <V> V.leo get() = Leo { map -> map effect this }
 
 inline fun <V, O> Leo<V>.bind(crossinline fn: (V) -> Leo<O>): Leo<O> =
 	Leo { map ->
