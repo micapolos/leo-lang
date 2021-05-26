@@ -50,6 +50,23 @@ val numberTimesNumberDefinition
 			{ nativeValue }, Number::times
 		)
 
+val textObjectJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				objectName lineTo script(textName lineTo script(anyName)),
+				javaName lineTo script()
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					objectName fieldTo rhs(
+						native(nativeValue(objectName).nativeValue(textName).nativeText)
+					)
+				)
+			)
+		}
+
 val textClassJavaDefinition
 	get() =
 		nativeDefinition(
@@ -81,6 +98,27 @@ val javaClassMethodNameTextDefinition
 						native(
 							nativeValue(javaName).nativeValue(className).nativeClass.getMethod(
 								nativeValue(methodName).nativeValue(textName).nativeText
+							)
+						)
+					)
+				)
+			)
+		}
+
+val javaObjectInvokeJavaMethodDefinition
+	get() =
+		nativeDefinition(
+			script(
+				javaName lineTo script(objectName lineTo script(anyName)),
+				invokeName lineTo script(javaName lineTo script(methodName lineTo script(anyName)))
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					objectName fieldTo rhs(
+						native(
+							nativeValue(invokeName).nativeValue(javaName).nativeValue(methodName).nativeMethod.invoke(
+								nativeValue(javaName).nativeValue(objectName).nativeObject
 							)
 						)
 					)

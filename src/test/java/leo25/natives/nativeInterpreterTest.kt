@@ -10,6 +10,17 @@ import kotlin.test.Test
 
 class NativeInterpreterTest {
 	@Test
+	fun textObjectJava() {
+		script(
+			line(literal("Hello, world!")),
+			objectName lineTo script(),
+			javaName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native("Hello, world!"))))
+	}
+
+	@Test
 	fun textClassJava() {
 		script(
 			line(literal("java.lang.String")),
@@ -33,6 +44,29 @@ class NativeInterpreterTest {
 				script(
 					javaName lineTo script(
 						methodName lineTo native(String::class.java.getMethod("length"))
+					)
+				)
+			)
+	}
+
+	@Test
+	fun javaObjectInvokeMethod() {
+		script(
+			line(literal("Hello, world!")),
+			objectName lineTo script(),
+			javaName lineTo script(),
+			invokeName lineTo script(
+				line(literal("java.lang.String")),
+				className lineTo script(),
+				javaName lineTo script(),
+				methodName lineTo script(literal("length"))
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					javaName lineTo script(
+						objectName lineTo native(String::class.java.getMethod("length").invoke("Hello, world!"))
 					)
 				)
 			)
