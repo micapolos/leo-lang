@@ -16,7 +16,7 @@ fun <V> leo(value: V) =
 
 val <V> V.leo get() = Leo { map -> map effect this }
 
-fun <V, O> Leo<V>.bind(fn: (V) -> Leo<O>): Leo<O> =
+inline fun <V, O> Leo<V>.bind(crossinline fn: (V) -> Leo<O>): Leo<O> =
 	Leo { map ->
 		run(map).let { mapToV ->
 			fn(mapToV.value).let { leoO ->
@@ -25,22 +25,22 @@ fun <V, O> Leo<V>.bind(fn: (V) -> Leo<O>): Leo<O> =
 		}
 	}
 
-fun <V, O> Leo<V?>.nullableBind(fn: (V) -> Leo<O>): Leo<O?> =
+inline fun <V, O> Leo<V?>.nullableBind(crossinline fn: (V) -> Leo<O>): Leo<O?> =
 	bind {
 		if (it == null) leo<O?>(null)
 		else fn(it)
 	}
 
-fun <V> Leo<V?>.or(fn: () -> Leo<V>): Leo<V> =
+inline fun <V> Leo<V?>.or(crossinline fn: () -> Leo<V>): Leo<V> =
 	bind { it?.leo ?: fn() }
 
-fun <V, O> Leo<V>.map(fn: (V) -> O): Leo<O> =
+inline fun <V, O> Leo<V>.map(crossinline fn: (V) -> O): Leo<O> =
 	bind { fn(it).leo }
 
-fun <V, O> Leo<V?>.nullableMap(fn: (V) -> O): Leo<O?> =
+inline fun <V, O> Leo<V?>.nullableMap(crossinline fn: (V) -> O): Leo<O?> =
 	nullableBind { leo(fn(it)) }
 
-fun <T> Leo<T>.catch(fn: (Throwable) -> Leo<T>): Leo<T> =
+inline fun <T> Leo<T>.catch(crossinline fn: (Throwable) -> Leo<T>): Leo<T> =
 	Leo { environment ->
 		try {
 			run(environment)

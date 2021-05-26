@@ -4,7 +4,7 @@ import leo.base.Effect
 
 data class RepeatException(val effect: Effect<Environment, *>) : RuntimeException()
 
-fun <V> Leo<V>.bindRepeating(fn: (V) -> Leo<V>): Leo<V> =
+inline fun <V> Leo<V>.bindRepeating(crossinline fn: (V) -> Leo<V>): Leo<V> =
 	Leo { environment ->
 		run(environment).let { effect ->
 			var repeatedEffect = effect
@@ -21,7 +21,7 @@ fun <V> Leo<V>.bindRepeating(fn: (V) -> Leo<V>): Leo<V> =
 		}
 	}
 
-val <V> Leo<V>.repeat: Leo<V>
+inline val <V> Leo<V>.repeat: Leo<V>
 	get() =
 		Leo { environment ->
 			throw RepeatException(run(environment))
