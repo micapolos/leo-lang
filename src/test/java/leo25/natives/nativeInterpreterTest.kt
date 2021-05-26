@@ -21,6 +21,18 @@ class NativeInterpreterTest {
 	}
 
 	@Test
+	fun javaObjectText() {
+		script(
+			line(literal("Hello, world!")),
+			objectName lineTo script(),
+			javaName lineTo script(),
+			textName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(literal("Hello, world!")))
+	}
+
+	@Test
 	fun textClassJava() {
 		script(
 			line(literal("java.lang.String")),

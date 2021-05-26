@@ -3,7 +3,6 @@ package leo25.natives
 import leo14.*
 import leo14.Number
 import leo14.untyped.typed.loadClass
-import leo16.nativeString
 import leo25.*
 
 val textAppendTextDefinition
@@ -65,6 +64,17 @@ val textObjectJavaDefinition
 					)
 				)
 			)
+		}
+
+val javaObjectTextDefinition
+	get() =
+		nativeDefinition(
+			script(
+				javaName lineTo script(objectName lineTo script(anyName)),
+				textName lineTo script()
+			)
+		) {
+			value(field(literal(nativeValue(javaName).nativeValue(objectName).nativeObject as String)))
 		}
 
 val textClassJavaDefinition
