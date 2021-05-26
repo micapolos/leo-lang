@@ -63,6 +63,20 @@ class ScriptStringTest {
 	}
 
 	@Test
+	fun twoComplexFields() {
+		script(
+			"foo" lineTo script(
+				"bar" lineTo script("gar"),
+				"far" lineTo script("rar")
+			),
+			"zoo" lineTo script("zar")
+		)
+			.notation
+			.string
+			.assertEqualTo("foo\n  bar gar\n  far rar\nzoo zar\n")
+	}
+
+	@Test
 	fun text() {
 		script(literal("foo"))
 			.string
