@@ -9,8 +9,8 @@ let
     number.length
 
 test
-  "Hello, world!".lengtha
-  equals lengtha 13
+  "Hello, world!".length
+  equals length 13
 
 test
   "Hello, "
