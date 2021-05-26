@@ -4,6 +4,7 @@ import leo14.*
 import leo14.Number
 import leo14.untyped.typed.loadClass
 import leo15.arrayName
+import leo16.native.nativeObjectClassDefinition
 import leo25.*
 
 val textAppendTextDefinition
@@ -41,6 +42,18 @@ val numberTimesNumberDefinition
 			numberName, { nativeNumber },
 			{ nativeValue }, Number::times
 		)
+
+val nullObjectJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				objectName lineTo script(nullName),
+				javaName lineTo script()
+			)
+		) {
+			value(javaName fieldTo value(objectName fieldTo rhs(native(null))))
+		}
+
 
 val textObjectJavaDefinition
 	get() =

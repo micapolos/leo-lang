@@ -3,11 +3,21 @@ package leo25.natives
 import leo.base.assertEqualTo
 import leo.base.assertNotNull
 import leo14.*
-import leo20.patternLineOrNull
 import leo25.*
 import kotlin.test.Test
 
 class NativeInterpreterTest {
+	@Test
+	fun nullObjectJava() {
+		script(
+			nullName lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native(null))))
+	}
+
 	@Test
 	fun textObjectJava() {
 		script(

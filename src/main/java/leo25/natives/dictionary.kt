@@ -12,6 +12,7 @@ val nativeDictionary: Dictionary
 			.plus(numberMinusNumberDefinition)
 			.plus(numberTimesNumberDefinition)
 
+			.plus(nullObjectJavaDefinition)
 			.plus(arrayObjectJavaDefinition)
 
 			.plus(textObjectJavaDefinition)
