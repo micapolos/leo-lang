@@ -80,6 +80,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		doName -> plusDoLeo(scriptField.rhs)
 		doingName -> plusDoingOrNullLeo(scriptField.rhs)
 		evaluateName -> plusEvaluateLeo(scriptField.rhs)
+		exampleName -> plusExampleLeo(scriptField.rhs)
 		failName -> plusFailLeo(scriptField.rhs)
 		hashName -> plusHashOrNullLeo(scriptField.rhs)
 		isName -> plusIsLeo(scriptField.rhs)
@@ -142,6 +143,9 @@ inline fun Interpreter.plusEvaluateLeo(rhs: Script): Leo<Interpreter> =
 			setLeo(evaluated)
 		}
 	}
+
+inline fun Interpreter.plusExampleLeo(rhs: Script): Leo<Interpreter> =
+	resolver.valueLeo(rhs).bind { leo }
 
 inline fun Interpreter.plusFailLeo(rhs: Script): Leo<Interpreter> =
 	if (!value.isEmpty) value(syntaxName).throwError()

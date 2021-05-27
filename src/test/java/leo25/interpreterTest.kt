@@ -661,4 +661,14 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script("x" lineTo script("zero")))
 	}
+
+	@Test
+	fun example() {
+		script(
+			"x" lineTo script("zero"),
+			exampleName lineTo script("foo" lineTo script("bar"))
+		)
+			.interpret
+			.assertEqualTo(script("x" lineTo script("zero")))
+	}
 }

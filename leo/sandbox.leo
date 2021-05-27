@@ -1,7 +1,10 @@
 use library number
+use library text
 
-x 10
-y 20
-point.center
-radius 10
-circle
+point
+  with
+    2
+    plus 2
+  with
+    "Hello, "
+    append "world!"
