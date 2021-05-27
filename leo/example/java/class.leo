@@ -1,1 +1,1 @@
-"java.lang.String".name.class.object.java
+"java.lang.String".class.java
