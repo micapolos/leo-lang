@@ -215,10 +215,7 @@ inline fun Interpreter.plusTryLeo(rhs: Script): Leo<Interpreter> =
 		.catch { throwable -> setLeo(value(tryName fieldTo throwable.value)) }
 
 inline fun Interpreter.plusUpdateLeo(rhs: Script): Leo<Interpreter> =
-	dictionary.updateOrNullLeo(value, rhs).bind { value ->
-		if (value == null) leo.also { value("error").throwError() }
-		else setLeo(value)
-	}
+	dictionary.updateLeo(value, rhs).bind { setLeo(it) }
 
 inline fun Interpreter.plusDynamicLeo(scriptField: ScriptField): Leo<Interpreter> =
 	dictionary.fieldLeo(scriptField).bind {

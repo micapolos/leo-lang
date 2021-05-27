@@ -231,37 +231,34 @@ fun Dictionary.letBeDefinitionOrNull(rhs: Script): Leo<Definition?> =
 		}
 	} ?: leo(null)
 
-fun Dictionary.updateOrNullLeo(value: Value, script: Script): Leo<Value?> =
-	value.fieldOrNull?.let { field ->
-		field.rhs.valueOrNull?.let { rhs ->
-			updateStructureOrNullLeo(rhs, script).nullableMap { rhs ->
-				value(field.name fieldTo rhs)
+fun Dictionary.updateLeo(value: Value, script: Script): Leo<Value> =
+	value.structureOrThrow.let { structure ->
+		updateStructureLeo(structure.value, script).map { rhs ->
+			value(structure.name fieldTo rhs)
+		}
+	}
+
+fun Dictionary.updateStructureLeo(value: Value, script: Script): Leo<Value> =
+	value.leo.fold(script.lineSeq.reverse) { line ->
+		line.fieldOrNull.notNullOrThrow { value(line.field) }.let { fieldOrNull ->
+			bind { value ->
+				updateStructureLeo(value, fieldOrNull)
 			}
 		}
-	} ?: leo(null)
-
-fun Dictionary.updateStructureOrNullLeo(value: Value, script: Script): Leo<Value?> =
-	value.orNull.leo.fold(script.lineSeq.reverse.map { fieldOrNull }) { fieldOrNull ->
-		nullableBind { value ->
-			if (fieldOrNull == null) leo(null)
-			else updateStructureOrNullLeo(value, fieldOrNull)
-		}
 	}
 
-fun Dictionary.updateStructureOrNullLeo(value: Value, scriptField: ScriptField): Leo<Value?> =
+fun Dictionary.updateStructureLeo(value: Value, scriptField: ScriptField): Leo<Value> =
 	when (value) {
-		EmptyValue -> leo(null)
+		EmptyValue -> value("no" fieldTo value("field" fieldTo value(scriptField.string))).throwError()
 		is LinkValue ->
-			updateStructureOrNullLeo(value.link, scriptField)
-				.nullableBind { value(it).leo }
+			updateStructureLeo(value.link, scriptField).map { value(it) }
 	}
 
-fun Dictionary.updateStructureOrNullLeo(link: Link, scriptField: ScriptField): Leo<Link?> =
+fun Dictionary.updateStructureLeo(link: Link, scriptField: ScriptField): Leo<Link> =
 	if (link.field.name == scriptField.name)
-		link.field.rhs.valueOrNull.leo.nullableBind { rhs ->
+		link.field.rhs.valueOrNull.notNullOrThrow { value(link) }.leo.bind { rhs ->
 			context.interpreter(rhs).plusLeo(scriptField.rhs).map { rhs ->
 				(link.value linkTo (scriptField.name fieldTo rhs.value))
 			}
 		}
-	else updateStructureOrNullLeo(link.value, scriptField)
-		.nullableMap { it linkTo link.field }
+	else updateStructureLeo(link.value, scriptField).map { it linkTo link.field }

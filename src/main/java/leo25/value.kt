@@ -32,6 +32,7 @@ val Rhs.functionOrNull: Function? get() = (this as? FunctionRhs)?.function
 val Rhs.nativeOrNull: Native? get() = (this as? NativeRhs)?.native
 
 data class Field(val name: String, val rhs: Rhs)
+data class Structure(val name: String, val value: Value)
 
 val Value.string: String get() = script.string
 
@@ -39,6 +40,7 @@ infix fun String.fieldTo(rhs: Rhs): Field = Field(this, rhs)
 infix fun String.fieldTo(value: Value): Field = this fieldTo rhs(value)
 fun field(literal: Literal): Field = literal.field
 fun field(function: Function): Field = doingName fieldTo rhs(function)
+infix fun String.structureTo(value: Value) = Structure(this, value)
 
 infix fun Value.linkTo(field: Field) = Link(this, field)
 
@@ -60,6 +62,15 @@ val Field.nativeOrNull: Native? get() = rhs.nativeOrNull
 
 val Value.functionOrNull: Function? get() = fieldOrNull?.functionOrNull
 val Value.fieldOrNull: Field? get() = linkOrNull?.run { notNullIf(value.isEmpty) { field } }
+val Value.structureOrNull: Structure?
+	get() = fieldOrNull?.let { field ->
+		field.rhs.valueOrNull?.let { value ->
+			field.name structureTo value
+		}
+	}
+val Value.structureOrThrow: Structure
+	get() =
+		structureOrNull.notNullOrThrow { plus(notName fieldTo value("structure")) }
 
 val Value.resolveLeo: Leo<Value>
 	get() =
