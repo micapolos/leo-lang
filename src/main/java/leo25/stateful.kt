@@ -7,7 +7,7 @@ data class Stateful<S, out V>(
 	val run: (S) -> Effect<S, V>
 )
 
-fun <S, T> Stateful<S, T>.run(state: S): T =
+fun <S, T> Stateful<S, T>.get(state: S): T =
 	run(state).value
 
 inline fun <S, V> V.stateful() = Stateful<S, V> { map -> map effect this }
