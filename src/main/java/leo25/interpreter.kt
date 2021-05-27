@@ -76,7 +76,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		giveName -> plusApplyLeo(scriptField.rhs)
 		asName -> plusAsLeo(scriptField.rhs)
 		commentName -> plusCommentLeo(scriptField.rhs)
-		becomeName -> plusBeLeo(scriptField.rhs)
+		beName -> plusBeLeo(scriptField.rhs)
 		doName -> plusDoLeo(scriptField.rhs)
 		doingName -> plusDoingOrNullLeo(scriptField.rhs)
 		evaluateName -> plusEvaluateLeo(scriptField.rhs)

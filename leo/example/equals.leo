@@ -13,5 +13,5 @@ comment
 plus 2
 equals 4
 switch
-  yes do "2 + 2 == 4"
-  no do "2 + 2 != 4"
+  yes be "2 + 2 == 4"
+  no be "2 + 2 != 4"

@@ -285,10 +285,10 @@ class InterpreterTest {
 					numberName lineTo script(),
 					switchName lineTo script(
 						"zero" lineTo script(
-							becomeName lineTo script(line(literal("OK")))
+							doName lineTo script(line(literal("OK")))
 						),
 						"one" lineTo script(
-							becomeName lineTo script(
+							doName lineTo script(
 								numberName lineTo script("zero"),
 								repeatName lineTo script(),
 								"tail" lineTo script("ignored")
@@ -311,10 +311,10 @@ class InterpreterTest {
 					numberName lineTo script(),
 					switchName lineTo script(
 						"zero" lineTo script(
-							becomeName lineTo script(line(literal("OK")))
+							doName lineTo script(line(literal("OK")))
 						),
 						"one" lineTo script(
-							becomeName lineTo script(
+							doName lineTo script(
 								numberName lineTo script("zero"),
 								recurseName lineTo script()
 							)
@@ -382,7 +382,7 @@ class InterpreterTest {
 	fun be() {
 		script(
 			"zero" lineTo script(),
-			becomeName lineTo script("one")
+			beName lineTo script("one")
 		)
 			.interpret
 			.assertEqualTo(script("one"))
