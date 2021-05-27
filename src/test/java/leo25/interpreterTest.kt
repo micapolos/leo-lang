@@ -632,4 +632,33 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script(valueName lineTo script("foo" lineTo script("bar"))))
 	}
+
+	@Test
+	fun with() {
+		script(
+			"x" lineTo script("zero"),
+			withName lineTo script(
+				"y" lineTo script("one"),
+				"z" lineTo script("two")
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"x" lineTo script("zero"),
+					"y" lineTo script("one"),
+					"z" lineTo script("two")
+				)
+			)
+	}
+
+	@Test
+	fun withEmpty() {
+		script(
+			"x" lineTo script("zero"),
+			withName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script("x" lineTo script("zero")))
+	}
 }

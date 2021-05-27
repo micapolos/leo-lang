@@ -1,6 +1,7 @@
 use library number
 
-point
-  x 10.increment
-  y 20
-value.text.value.text.value
+x 10
+y 20
+point.center
+radius 10
+circle

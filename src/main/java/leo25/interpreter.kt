@@ -98,6 +98,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		tryName -> plusTryLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		valueName -> plusValueOrNullLeo(scriptField.rhs)
+		withName -> plusWithLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
@@ -238,6 +239,12 @@ inline fun Interpreter.plusValueOrNullLeo(rhs: Script): Leo<Interpreter?> =
 		}
 		.leo
 		.nullableBind { setLeo(it) }
+
+
+inline fun Interpreter.plusWithLeo(rhs: Script): Leo<Interpreter> =
+	resolver.valueLeo(rhs).bind { rhs ->
+		setLeo(value + rhs)
+	}
 
 inline fun Interpreter.plusValueLeo(rhs: Script): Leo<Interpreter?> =
 	rhs.useOrNull.leo.nullableBind {

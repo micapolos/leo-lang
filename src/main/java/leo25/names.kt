@@ -39,5 +39,6 @@ val traceName = "trace"
 val tryName = "try"
 val useName = "use"
 val valueName = "value"
+val withName = "with"
 val yesName = "yes"
 
