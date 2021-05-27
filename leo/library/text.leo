@@ -2,12 +2,12 @@ let
   text any
   length
   do
-    text.object.java
+    "java.lang.String".name.class.object.java.class
+    method
+      name "length"
+      types array.object.java
     invoke
-      "java.lang.String".name.class.object.java.class
-      method
-        name "length"
-        types array.object.java
+      text.object.java
       args array.object.java
     integer.number.length
 
@@ -19,12 +19,12 @@ let
   text any
   append text any
   do
-    text.object.java
+    "java.lang.String".name.class.object.java.class
+    method
+      name "concat"
+      types "java.lang.String".name.class.object.java.element.array.object.java
     invoke
-      "java.lang.String".name.class.object.java.class
-      method
-        name "concat"
-        types "java.lang.String".name.class.object.java.element.array.object.java
+      text.object.java
       args append.text.object.java.element.array.object.java
     text
 
