@@ -671,4 +671,50 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script("x" lineTo script("zero")))
 	}
+
+	@Test
+	fun valueSet() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one"),
+				"x" lineTo script("two")
+			),
+			setName lineTo script(
+				"y" lineTo script("three")
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("three"),
+						"x" lineTo script("two")
+					)
+				)
+			)
+
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one"),
+				"x" lineTo script("two")
+			),
+			setName lineTo script(
+				"x" lineTo script("three"),
+				"y" lineTo script("four")
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("four"),
+						"x" lineTo script("three")
+					)
+				)
+			)
+	}
 }

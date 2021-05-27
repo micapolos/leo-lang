@@ -22,6 +22,15 @@ fun Interpreter.set(context: Context): Interpreter =
 fun Dictionary.valueLeo(script: Script): Leo<Value> =
 	context.interpreterLeo(script).map { it.value }
 
+fun Dictionary.fieldsValueLeo(script: Script): Leo<Value> =
+	value().leo.fold(script.lineSeq.reverse) { line ->
+		bind { value ->
+			fieldLeo(line).bind { field ->
+				value.plus(field).leo
+			}
+		}
+	}
+
 fun Dictionary.fieldLeo(scriptLine: ScriptLine): Leo<Field> =
 	when (scriptLine) {
 		is FieldScriptLine -> fieldLeo(scriptLine.field)
@@ -65,7 +74,8 @@ inline fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
 	}
 
 inline fun Interpreter.plusDefinitionsOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
-	dictionary.definitionSeqOrNullLeo(scriptField).nullableMap { definitionSeq ->
+	if (!value.isEmpty) leo(null)
+	else dictionary.definitionSeqOrNullLeo(scriptField).nullableMap { definitionSeq ->
 		set(context.fold(definitionSeq.reverse) { plus(it) })
 	}
 
@@ -184,7 +194,9 @@ inline fun Interpreter.plusQuoteLeo(rhs: Script): Leo<Interpreter> =
 	setLeo(value.script.plus(rhs).value)
 
 inline fun Interpreter.plusSetLeo(rhs: Script): Leo<Interpreter> =
-	TODO()
+	dictionary.fieldsValueLeo(rhs).bind { rhs ->
+		setLeo(value.setOrNull(rhs).notNullOrThrow { value.plus(setName fieldTo rhs) })
+	}
 
 inline fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	dictionary.switchOrNullLeo(value, rhs).nullableBind {

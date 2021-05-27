@@ -149,7 +149,7 @@ class ValueTest {
 			)
 		)
 			.run {
-				setOrNull("x" fieldTo value("three"))
+				setOrNull(value("x" fieldTo value("three")))
 					.assertEqualTo(
 						value(
 							"point" fieldTo value(
@@ -160,7 +160,7 @@ class ValueTest {
 						)
 					)
 
-				setOrNull("y" fieldTo value("three"))
+				setOrNull(value("y" fieldTo value("three")))
 					.assertEqualTo(
 						value(
 							"point" fieldTo value(
@@ -171,14 +171,21 @@ class ValueTest {
 						)
 					)
 
-				setOrNull("z" fieldTo value("three"))
+				setOrNull(value("z" fieldTo value("three")))
+					.assertEqualTo(null)
+
+				setOrNull(
+					value(
+						"x" fieldTo value("three"),
+						"y" fieldTo value("four")
+					)
+				)
 					.assertEqualTo(
 						value(
 							"point" fieldTo value(
 								"x" fieldTo value("zero"),
-								"y" fieldTo value("one"),
-								"x" fieldTo value("two"),
-								"z" fieldTo value("three")
+								"y" fieldTo value("four"),
+								"x" fieldTo value("three")
 							)
 						)
 					)

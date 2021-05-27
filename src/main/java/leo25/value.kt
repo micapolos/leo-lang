@@ -315,15 +315,14 @@ val Value.resolveNameOrNull: Value?
 			}
 		}
 
-fun Value.setOrNull(field: Field): Value? =
+fun Value.setOrNull(value: Value): Value? =
 	fieldOrNull?.let { structureField ->
-		structureField.rhs.valueOrNull?.let { value ->
-			value(structureField.name fieldTo value.replaceOrPlus(field))
+		structureField.rhs.valueOrNull?.let { structureBody ->
+			structureBody
+				.orNullFold(value.fieldSeq.reverse) { replaceOrNull(it) }
+				?.let { value(structureField.name fieldTo it) }
 		}
 	}
-
-fun Value.replaceOrPlus(field: Field): Value =
-	replaceOrNull(field) ?: plus(field)
 
 fun Value.replaceOrNull(field: Field): Value? =
 	when (this) {

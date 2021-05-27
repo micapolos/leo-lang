@@ -1,13 +1,11 @@
-use library text
-
 comment
   set
-    binds value fields
-    in the current scope
+    sets field values
 
+point
+  x 10
+  y 20
+  z 30
 set
-  first "Hello, "
-  second "world!"
-
-first.text
-append second.text
+  x 40
+  z 50
