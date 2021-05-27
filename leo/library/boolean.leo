@@ -9,11 +9,11 @@ let
 
 test
   false.boolean.negate
-  equals boolean true
+  equals true.boolean
 
 test
   true.boolean.negate
-  equals boolean false
+  equals false.boolean
 
 let
   boolean any
