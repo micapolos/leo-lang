@@ -12,4 +12,4 @@ point
   z 30
 set
   x plus 5
-  w plus 10
+  z plus 10
