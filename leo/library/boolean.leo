@@ -1,22 +1,4 @@
 let
-  object boolean true
-  java
-  do true.object.java
-
-test
-  true.boolean.object.java.script
-  equals java object native "true"
-
-let
-  object boolean false
-  java
-  do false.object.java
-
-test
-  false.boolean.object.java.script
-  equals java object native "false"
-
-let
   boolean any
   negate
   do
