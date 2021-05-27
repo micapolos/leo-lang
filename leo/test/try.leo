@@ -3,5 +3,5 @@ test
   equals quote try success kiss
 
 test
-  try fail booom
-  equals quote try error booom
+  try fail boom
+  equals quote try error boom

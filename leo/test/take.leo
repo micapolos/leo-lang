@@ -1,9 +1,9 @@
 test
-  x zero
-  y one
+  x 10
+  y 20
   take doing
-    first x
-    second y
+    x
+    and y
   equals
-    first x zero
-    second y one
+    x 10
+    and y 20

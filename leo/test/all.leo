@@ -3,6 +3,7 @@ use test be
 use test comment
 use test do
 use test equals
+use test evaluate
 use test example
 use test get
 use test give

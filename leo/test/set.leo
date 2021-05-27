@@ -1,29 +1,29 @@
 test
   point
-    x zero
-    y one
-  set x three
+    x 10
+    y 20
+  set x 30
   equals point
-    x three
-    y one
+    x 30
+    y 20
 
 test
   point
-    x zero
-    y one
-    z two
+    x 10
+    y 20
+    z 30
   set
-    x three
-    z four
+    x 40
+    z 50
   equals point
-    x three
-    y one
-    z four
+    x 40
+    y 20
+    z 50
 
 test
   try
     point
-      x zero
-      y one
-    set z two
+      x 10
+      y 20
+    set z 30
   equals quote try error no field z

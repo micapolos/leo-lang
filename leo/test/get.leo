@@ -1,16 +1,16 @@
 test
   point
-    x zero
-    y one
+    x 10
+    y 20
   x
-  equals x zero
+  equals x 10
 
 test
   point
-    x zero
-    y one
+    x 10
+    y 20
   y
-  equals y one
+  equals y 20
 
 test
   circle

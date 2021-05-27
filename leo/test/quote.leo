@@ -1,7 +1,11 @@
 test
   quote
-    red
-    color
+    point
+      x 10
+      y 20
+    x
   equals
-    red
-    with color
+    point
+      x 10
+      y 20
+    with x

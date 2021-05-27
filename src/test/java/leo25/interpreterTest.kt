@@ -518,10 +518,11 @@ class InterpreterTest {
 	@Test
 	fun fail() {
 		script(
-			failName lineTo script("foo")
+			line("boom"),
+			line("fail")
 		)
 			.interpret
-			.assertEqualTo(script(errorName lineTo script("foo")))
+			.assertEqualTo(script(errorName lineTo script("boom")))
 	}
 
 	@Test
@@ -536,12 +537,10 @@ class InterpreterTest {
 	@Test
 	fun try_error() {
 		script(
-			tryName lineTo script(
-				failName lineTo script("foo")
-			)
+			tryName lineTo script(line("boom"), line("fail"))
 		)
 			.interpret
-			.assertEqualTo(script(tryName lineTo script(errorName lineTo script("foo"))))
+			.assertEqualTo(script(tryName lineTo script(errorName lineTo script("boom"))))
 	}
 
 	@Test

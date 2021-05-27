@@ -1,10 +1,10 @@
 test
   doing
-    first x
-    second y
+    x
+    and y
   give
-    x zero
-    y one
+    x 10
+    y 20
   equals
-    first x zero
-    second y one
+    x 10
+    and y 20

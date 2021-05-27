@@ -1,14 +1,14 @@
 test
-  first.hash
+  10.hash
   is hash number any
   equals quote is yes
 
 test
-  first.hash
-  equals first.hash
+  10.hash
+  equals 10.hash
   equals quote equals yes
 
 test
-  first.hash
-  equals second.hash
+  10.hash
+  equals 20.hash
   equals quote equals no

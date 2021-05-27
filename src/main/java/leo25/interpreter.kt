@@ -155,10 +155,8 @@ inline fun Interpreter.plusExampleLeo(rhs: Script): Leo<Interpreter> =
 	dictionary.valueLeo(rhs).bind { leo }
 
 inline fun Interpreter.plusFailLeo(rhs: Script): Leo<Interpreter> =
-	if (!value.isEmpty) value(syntaxName).throwError()
-	else dictionary.valueLeo(rhs).bind { value ->
-		leo.also { value.throwError() }
-	}
+	if (!rhs.isEmpty) value(syntaxName).throwError()
+	else leo.also { value.throwError() }
 
 inline fun Interpreter.plusTestLeo(test: Script): Leo<Interpreter> =
 	test.matchInfix(equalsName) { lhs, rhs ->

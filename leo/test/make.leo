@@ -1,7 +1,11 @@
 test
-  x zero
-  y one
+  x 10
+  y 20
   point
   equals point
-    x zero
-    y one
+    x 10
+    y 20
+
+test
+  red.color
+  equals color red

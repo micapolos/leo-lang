@@ -1,13 +1,13 @@
 test
   point
-    x zero
-    y one
+    x 10
+    y 20
   value.text
-  equals "point\n  x zero\n  y one\n"
+  equals "point\n  x 10\n  y 20\n"
 
 test
-  "point\n  x zero\n  y one\n"
+  "point\n  x 10\n  y 20\n"
   value.point
   equals point
-    x zero
-    y one
+    x 10
+    y 20
