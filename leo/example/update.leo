@@ -10,6 +10,6 @@ point
   x 10
   y 20
   z 30
-set
+update
   x plus 5
   z plus 10
