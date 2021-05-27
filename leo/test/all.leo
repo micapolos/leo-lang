@@ -2,6 +2,7 @@ use test as
 use test be
 use test comment
 use test do
+use test equals
 use test get
 use test give
 use test hash
@@ -14,6 +15,7 @@ use test quote
 use test recurse
 use test repeat
 use test set
+use test structure
 use test switch
 use test take
 use test text
