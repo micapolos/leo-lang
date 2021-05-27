@@ -150,9 +150,7 @@ val javaClassFieldDefinition
 					javaName lineTo script(anyName)
 				),
 				fieldName lineTo script(
-					nameName lineTo script(
-						textName lineTo script(anyName)
-					)
+					textName lineTo script(anyName)
 				)
 			)
 		) {
@@ -165,7 +163,6 @@ val javaClassFieldDefinition
 					.getField(
 						this
 							.nativeValue(fieldName)
-							.nativeValue(nameName)
 							.nativeValue(textName)
 							.nativeText
 					)

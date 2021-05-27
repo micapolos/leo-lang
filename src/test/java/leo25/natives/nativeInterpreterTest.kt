@@ -126,9 +126,7 @@ class NativeInterpreterTest {
 			className lineTo script(),
 			javaName lineTo script(),
 			className lineTo script(),
-			fieldName lineTo script(
-				nameName lineTo script(literal("TYPE"))
-			)
+			fieldName lineTo script(literal("TYPE"))
 		)
 			.interpret
 			.assertEqualTo(
@@ -149,9 +147,7 @@ class NativeInterpreterTest {
 			className lineTo script(),
 			javaName lineTo script(),
 			className lineTo script(),
-			fieldName lineTo script(
-				nameName lineTo script(literal("TYPE"))
-			),
+			fieldName lineTo script(literal("TYPE")),
 			getName lineTo script(line(nullName), line(javaName))
 		)
 			.interpret
