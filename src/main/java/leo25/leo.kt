@@ -1,7 +1,6 @@
 package leo25
 
 import leo.base.Effect
-import leo.base.Seq
 import leo.base.effect
 
 data class Leo<out V>(
@@ -13,7 +12,7 @@ val <T> Leo<T>.get: T
 		run(environment()).value
 
 inline fun <V> leo(value: V) =
-	Leo { map -> map effect value }
+	Leo { it effect value }
 
 inline val <V> V.leo get() = Leo { map -> map effect this }
 

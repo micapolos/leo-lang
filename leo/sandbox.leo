@@ -1,12 +1,9 @@
-"java.lang.String".class.java.class
-method
-  "concat"
-  args
-    element "java.lang.String".class.java
-    array.java
-invoke
-  "Hello, ".java
-  args
-    element "world!".java
-    array.java
-text
+use library number
+
+point
+  x 20
+  y 30
+do
+  point.x.number
+  plus point.y.number
+plus 1
