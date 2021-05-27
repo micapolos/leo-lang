@@ -1,11 +1,19 @@
 test
-  x zero
-  y one
+  x 10
+  y 20
   with
-    z two
-    w three
+    z 30
+    w 40
   equals
-    x zero
-    y one
-    z two
-    w three
+    x 10
+    y 20
+    z 30
+    w 40
+
+test
+  x 10
+  y 20
+  with
+  equals
+    x 10
+    y 20
