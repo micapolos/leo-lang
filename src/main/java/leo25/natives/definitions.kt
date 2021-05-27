@@ -1,9 +1,7 @@
 package leo25.natives
 
+import leo14.*
 import leo14.Number
-import leo14.lineTo
-import leo14.literal
-import leo14.script
 import leo14.untyped.typed.loadClass
 import leo15.arrayName
 import leo25.*
@@ -12,30 +10,21 @@ import java.lang.reflect.Method
 
 val nullObjectJavaDefinition
 	get() =
-		nativeDefinition(
-			script(
-				objectName lineTo script(nullName),
-				javaName lineTo script()
-			)
-		) { null.javaValue }
+		nativeDefinition(script(line(nullName), line(javaName))) {
+			null.javaValue
+		}
 
 val trueObjectJavaDefinition
 	get() =
-		nativeDefinition(
-			script(
-				objectName lineTo script(trueName),
-				javaName lineTo script()
-			)
-		) { true.javaValue }
+		nativeDefinition(script(line(trueName), line(javaName))) {
+			true.javaValue
+		}
 
 val falseObjectJavaDefinition
 	get() =
-		nativeDefinition(
-			script(
-				objectName lineTo script(falseName),
-				javaName lineTo script()
-			)
-		) { false.javaValue }
+		nativeDefinition(script(line(falseName), line(javaName))) {
+			false.javaValue
+		}
 
 val javaObjectClassDefinition
 	get() =
@@ -52,18 +41,18 @@ val javaObjectClassDefinition
 				.javaValue
 		}
 
-val textObjectJavaDefinition
+val textJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				objectName lineTo script(textName lineTo script(anyName)),
+				textName lineTo script(anyName),
 				javaName lineTo script()
 			)
 		) {
-			nativeValue(objectName).nativeValue(textName).nativeText.javaValue
+			nativeValue(textName).nativeText.javaValue
 		}
 
-val javaObjectTextDefinition
+val javaTextDefinition
 	get() =
 		nativeDefinition(
 			script(
@@ -74,18 +63,18 @@ val javaObjectTextDefinition
 			value(field(literal(nativeValue(javaName).javaObject as String)))
 		}
 
-val numberObjectJavaDefinition
+val numberJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				objectName lineTo script(numberName lineTo script(anyName)),
+				numberName lineTo script(anyName),
 				javaName lineTo script()
 			)
 		) {
-			nativeValue(objectName).nativeValue(numberName).nativeNumber.javaValue
+			nativeValue(numberName).nativeNumber.javaValue
 		}
 
-val javaObjectNumberDefinition
+val javaNumberDefinition
 	get() =
 		nativeDefinition(
 			script(
@@ -100,12 +89,11 @@ val numberIntegerObjectJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				objectName lineTo script(integerName lineTo script(numberName lineTo script(anyName))),
+				integerName lineTo script(numberName lineTo script(anyName)),
 				javaName lineTo script()
 			)
 		) {
 			this
-				.nativeValue(objectName)
 				.nativeValue(integerName)
 				.nativeValue(numberName)
 				.nativeNumber
@@ -125,33 +113,30 @@ val javaObjectIntegerNumberDefinition
 			value(field(literal(nativeValue(integerName).nativeValue(javaName).javaObject as Int)))
 		}
 
-val arrayObjectJavaDefinition
+val arrayJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				objectName lineTo script(arrayName lineTo script(anyName)),
+				arrayName lineTo script(anyName),
 				javaName lineTo script()
 			)
 		) {
-			nativeValue(objectName).nativeValue(arrayName).nativeArray.javaValue
+			nativeValue(arrayName).nativeArray.javaValue
 		}
 
 val textClassJavaDefinition
 	get() =
 		nativeDefinition(
 			script(
-				objectName lineTo script(
-					className lineTo script(
-						nameName lineTo script(
-							textName lineTo script(anyName)
-						)
+				className lineTo script(
+					nameName lineTo script(
+						textName lineTo script(anyName)
 					)
 				),
 				javaName lineTo script()
 			)
 		) {
 			this
-				.nativeValue(objectName)
 				.nativeValue(className)
 				.nativeValue(nameName)
 				.nativeValue(textName)
@@ -265,26 +250,24 @@ val javaMethodInvokeDefinition
 			)
 		) {
 			value(
-				javaName fieldTo value(
-					objectName fieldTo rhs(
-						native(
-							this
-								.nativeValue(methodName)
-								.nativeValue(javaName)
-								.javaObject
-								.run { this as Method }
-								.invoke(
-									this
-										.nativeValue(invokeName)
-										.nativeValue(javaName)
-										.javaObject,
-									*this
-										.nativeValue(invokeName)
-										.nativeValue(argsName)
-										.nativeValue(javaName)
-										.javaObject as Array<*>
-								)
-						)
+				javaName fieldTo rhs(
+					native(
+						this
+							.nativeValue(methodName)
+							.nativeValue(javaName)
+							.javaObject
+							.run { this as Method }
+							.invoke(
+								this
+									.nativeValue(invokeName)
+									.nativeValue(javaName)
+									.javaObject,
+								*this
+									.nativeValue(invokeName)
+									.nativeValue(argsName)
+									.nativeValue(javaName)
+									.javaObject as Array<*>
+							)
 					)
 				)
 			)

@@ -12,13 +12,13 @@ val nativeDictionary: Dictionary
 			.plus(falseObjectJavaDefinition)
 
 			.plus(javaObjectClassDefinition)
-			.plus(arrayObjectJavaDefinition)
+			.plus(arrayJavaDefinition)
 
-			.plus(textObjectJavaDefinition)
-			.plus(javaObjectTextDefinition)
+			.plus(textJavaDefinition)
+			.plus(javaTextDefinition)
 
-			.plus(numberObjectJavaDefinition)
-			.plus(javaObjectNumberDefinition)
+			.plus(numberJavaDefinition)
+			.plus(javaNumberDefinition)
 
 			.plus(numberIntegerObjectJavaDefinition)
 			.plus(javaObjectIntegerNumberDefinition)

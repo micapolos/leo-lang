@@ -36,12 +36,12 @@ val Value.nativeArray: Array<Any?>
 
 val Value.nativeArrayElement: Any?
 	get() =
-		nativeValue(javaName).nativeValue(objectName).nativeObject
+		nativeValue(javaName).nativeObject
 
 val Any?.javaValue: Value
 	get() =
-		value(javaName fieldTo value(objectName fieldTo rhs(native(this))))
+		value(javaName fieldTo rhs(native(this)))
 
 val Value.javaObject: Any?
 	get() =
-		nativeValue(objectName).nativeObject
+		nativeObject
