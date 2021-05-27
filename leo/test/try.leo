@@ -3,5 +3,9 @@ test
   equals quote try success kiss
 
 test
-  try fail boom
+  try boom.fail
   equals quote try error boom
+
+test
+  try fail bool
+  equals quote try error syntax
