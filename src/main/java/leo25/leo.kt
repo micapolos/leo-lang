@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.Effect
+import leo.base.Seq
 import leo.base.effect
 
 data class Leo<out V>(

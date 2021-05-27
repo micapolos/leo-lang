@@ -107,4 +107,81 @@ class ValueTest {
 				.as_(pattern(script(textName lineTo script(anyName))))
 		}
 	}
+
+	@Test
+	fun replaceOrNull() {
+		value(
+			"x" fieldTo value("zero"),
+			"y" fieldTo value("one"),
+			"x" fieldTo value("two")
+		)
+			.run {
+				replaceOrNull("x" fieldTo value("three"))
+					.assertEqualTo(
+						value(
+							"x" fieldTo value("zero"),
+							"y" fieldTo value("one"),
+							"x" fieldTo value("three")
+						)
+					)
+
+				replaceOrNull("y" fieldTo value("three"))
+					.assertEqualTo(
+						value(
+							"x" fieldTo value("zero"),
+							"y" fieldTo value("three"),
+							"x" fieldTo value("two")
+						)
+					)
+
+				replaceOrNull("z" fieldTo value("three"))
+					.assertEqualTo(null)
+			}
+	}
+
+	@Test
+	fun setOrNull() {
+		value(
+			"point" fieldTo value(
+				"x" fieldTo value("zero"),
+				"y" fieldTo value("one"),
+				"x" fieldTo value("two")
+			)
+		)
+			.run {
+				setOrNull("x" fieldTo value("three"))
+					.assertEqualTo(
+						value(
+							"point" fieldTo value(
+								"x" fieldTo value("zero"),
+								"y" fieldTo value("one"),
+								"x" fieldTo value("three")
+							)
+						)
+					)
+
+				setOrNull("y" fieldTo value("three"))
+					.assertEqualTo(
+						value(
+							"point" fieldTo value(
+								"x" fieldTo value("zero"),
+								"y" fieldTo value("three"),
+								"x" fieldTo value("two")
+							)
+						)
+					)
+
+				setOrNull("z" fieldTo value("three"))
+					.assertEqualTo(
+						value(
+							"point" fieldTo value(
+								"x" fieldTo value("zero"),
+								"y" fieldTo value("one"),
+								"x" fieldTo value("two"),
+								"z" fieldTo value("three")
+							)
+						)
+					)
+			}
+	}
 }

@@ -314,3 +314,23 @@ val Value.resolveNameOrNull: Value?
 				value.resolveOrNull(name)
 			}
 		}
+
+fun Value.setOrNull(field: Field): Value? =
+	fieldOrNull?.let { structureField ->
+		structureField.rhs.valueOrNull?.let { value ->
+			value(structureField.name fieldTo value.replaceOrPlus(field))
+		}
+	}
+
+fun Value.replaceOrPlus(field: Field): Value =
+	replaceOrNull(field) ?: plus(field)
+
+fun Value.replaceOrNull(field: Field): Value? =
+	when (this) {
+		EmptyValue -> null
+		is LinkValue -> link.replaceOrNull(field)?.let { value(it) }
+	}
+
+fun Link.replaceOrNull(field: Field): Link? =
+	if (this.field.name == field.name) value linkTo field
+	else value.replaceOrNull(field)?.linkTo(this.field)
