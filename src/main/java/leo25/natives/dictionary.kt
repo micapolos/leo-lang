@@ -8,6 +8,10 @@ val nativeDictionary: Dictionary
 	get() =
 		dictionary()
 			.plus(nullObjectJavaDefinition)
+			.plus(trueObjectJavaDefinition)
+			.plus(falseObjectJavaDefinition)
+
+			.plus(javaObjectClassDefinition)
 			.plus(arrayObjectJavaDefinition)
 
 			.plus(textObjectJavaDefinition)

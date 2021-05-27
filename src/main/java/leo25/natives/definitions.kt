@@ -18,6 +18,51 @@ val nullObjectJavaDefinition
 			value(javaName fieldTo value(objectName fieldTo rhs(native(null))))
 		}
 
+val trueObjectJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				objectName lineTo script(trueName),
+				javaName lineTo script()
+			)
+		) {
+			value(javaName fieldTo value(objectName fieldTo rhs(native(true))))
+		}
+
+val falseObjectJavaDefinition
+	get() =
+		nativeDefinition(
+			script(
+				objectName lineTo script(falseName),
+				javaName lineTo script()
+			)
+		) {
+			value(javaName fieldTo value(objectName fieldTo rhs(native(false))))
+		}
+
+val javaObjectClassDefinition
+	get() =
+		nativeDefinition(
+			script(
+				javaName lineTo script(objectName lineTo script(anyName)),
+				getName lineTo script(className lineTo script())
+			)
+		) {
+			value(
+				javaName fieldTo value(
+					objectName fieldTo rhs(
+						native(
+							this
+								.nativeValue(javaName)
+								.nativeValue(objectName)
+								.nativeObject!!
+								.javaClass
+						)
+					)
+				)
+			)
+		}
+
 val textObjectJavaDefinition
 	get() =
 		nativeDefinition(

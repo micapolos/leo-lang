@@ -19,6 +19,40 @@ class NativeInterpreterTest {
 	}
 
 	@Test
+	fun trueObjectJava() {
+		script(
+			trueName lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native(true))))
+	}
+
+	@Test
+	fun falseObjectJava() {
+		script(
+			falseName lineTo script(),
+			objectName lineTo script(),
+			javaName lineTo script()
+		)
+			.interpret
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native(false))))
+	}
+
+	@Test
+	fun javaObjectClassJava() {
+		script(
+			line(literal("foo")),
+			objectName lineTo script(),
+			javaName lineTo script(),
+			getName lineTo script(className lineTo script())
+		)
+			.interpret
+			.assertEqualTo(script(javaName lineTo script(objectName lineTo native("foo".javaClass))))
+	}
+
+	@Test
 	fun textObjectJava() {
 		script(
 			line(literal("Hello, world!")),
