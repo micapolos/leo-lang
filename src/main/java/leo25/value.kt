@@ -326,21 +326,19 @@ val Value.resolveNameOrNull: Value?
 			}
 		}
 
-fun Value.setOrNull(value: Value): Value? =
-	fieldOrNull?.let { structureField ->
-		structureField.rhs.valueOrNull?.let { structureBody ->
-			structureBody
-				.orNullFold(value.fieldSeq.reverse) { replaceOrNull(it) }
-				?.let { value(structureField.name fieldTo it) }
-		}
+fun Value.setOrThrow(value: Value): Value =
+	structureOrThrow.let { structure ->
+		structure.value
+			.fold(value.fieldSeq.reverse) { replaceOrThrow(it) }
+			.let { value(structure.name fieldTo it) }
 	}
 
-fun Value.replaceOrNull(field: Field): Value? =
+fun Value.replaceOrThrow(field: Field): Value =
 	when (this) {
-		EmptyValue -> null
-		is LinkValue -> link.replaceOrNull(field)?.let { value(it) }
+		EmptyValue -> value("no" fieldTo value("field" fieldTo value(field.name))).throwError()
+		is LinkValue -> link.replaceOrThrow(field).let { value(it) }
 	}
 
-fun Link.replaceOrNull(field: Field): Link? =
+fun Link.replaceOrThrow(field: Field): Link =
 	if (this.field.name == field.name) value linkTo field
-	else value.replaceOrNull(field)?.linkTo(this.field)
+	else value.replaceOrThrow(field).linkTo(this.field)

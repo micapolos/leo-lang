@@ -5,6 +5,7 @@ import leo14.lineTo
 import leo14.literal
 import leo14.script
 import kotlin.test.Test
+import kotlin.test.assertFails
 import kotlin.test.assertFailsWith
 
 class ValueTest {
@@ -116,7 +117,7 @@ class ValueTest {
 			"x" fieldTo value("two")
 		)
 			.run {
-				replaceOrNull("x" fieldTo value("three"))
+				replaceOrThrow("x" fieldTo value("three"))
 					.assertEqualTo(
 						value(
 							"x" fieldTo value("zero"),
@@ -125,7 +126,7 @@ class ValueTest {
 						)
 					)
 
-				replaceOrNull("y" fieldTo value("three"))
+				replaceOrThrow("y" fieldTo value("three"))
 					.assertEqualTo(
 						value(
 							"x" fieldTo value("zero"),
@@ -134,8 +135,9 @@ class ValueTest {
 						)
 					)
 
-				replaceOrNull("z" fieldTo value("three"))
-					.assertEqualTo(null)
+				assertFails {
+					replaceOrThrow("z" fieldTo value("three"))
+				}
 			}
 	}
 
@@ -149,7 +151,7 @@ class ValueTest {
 			)
 		)
 			.run {
-				setOrNull(value("x" fieldTo value("three")))
+				setOrThrow(value("x" fieldTo value("three")))
 					.assertEqualTo(
 						value(
 							"point" fieldTo value(
@@ -160,7 +162,7 @@ class ValueTest {
 						)
 					)
 
-				setOrNull(value("y" fieldTo value("three")))
+				setOrThrow(value("y" fieldTo value("three")))
 					.assertEqualTo(
 						value(
 							"point" fieldTo value(
@@ -171,10 +173,11 @@ class ValueTest {
 						)
 					)
 
-				setOrNull(value("z" fieldTo value("three")))
-					.assertEqualTo(null)
+				assertFails {
+					setOrThrow(value("z" fieldTo value("three")))
+				}
 
-				setOrNull(
+				setOrThrow(
 					value(
 						"x" fieldTo value("three"),
 						"y" fieldTo value("four")

@@ -195,7 +195,7 @@ inline fun Interpreter.plusQuoteLeo(rhs: Script): Leo<Interpreter> =
 
 inline fun Interpreter.plusSetLeo(rhs: Script): Leo<Interpreter> =
 	dictionary.fieldsValueLeo(rhs).bind { rhs ->
-		setLeo(value.setOrNull(rhs).notNullOrThrow { value.plus(setName fieldTo rhs) })
+		setLeo(value.setOrThrow(rhs))
 	}
 
 inline fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
