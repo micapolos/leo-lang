@@ -1,11 +1,30 @@
+private
+  let
+    string.class
+    be "java.lang.String".name.class.object.java.class
+
+  let
+    length.method
+    be
+      string.class
+      method
+        name "length"
+        types array.object.java
+
+  let
+    concat.method
+    be
+      string.class
+      method
+        name "concat"
+        types string.class.java.element.array.object.java
+
 let
   text any
   length
   do
-    "java.lang.String".name.class.object.java.class
+    script length
     method
-      name "length"
-      types array.object.java
     invoke
       text.object.java
       args array.object.java
@@ -19,10 +38,7 @@ let
   text any
   append text any
   do
-    "java.lang.String".name.class.object.java.class
-    method
-      name "concat"
-      types "java.lang.String".name.class.object.java.element.array.object.java
+    concat.method
     invoke
       text.object.java
       args append.text.object.java.element.array.object.java

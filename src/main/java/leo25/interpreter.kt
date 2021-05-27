@@ -90,11 +90,14 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		repeatName -> plusRepeatLeo(scriptField.rhs)
 		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
 		takeName -> plusTakeLeo(scriptField.rhs)
+		textName -> plusTextOrNullLeo(scriptField.rhs)
 		failName -> plusFailLeo(scriptField.rhs)
 		testName -> plusTestLeo(scriptField.rhs)
+		textName -> plusTextOrNullLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		tryName -> plusTryLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
+		valueName -> plusValueOrNullLeo(scriptField.rhs)
 		else -> leo(null)
 	}
 
@@ -115,6 +118,16 @@ inline fun Interpreter.plusTakeLeo(rhs: Script): Leo<Interpreter> =
 			}
 		}
 	}
+
+inline fun Interpreter.plusTextOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	rhs
+		.matchEmpty {
+			value.resolvePrefixOrNull(valueName) {
+				value(field(literal(it.string)))
+			}
+		}
+		.leo
+		.nullableBind { setLeo(it) }
 
 inline fun Interpreter.plusBeLeo(rhs: Script): Leo<Interpreter> =
 	resolver.valueLeo(rhs).bind { setLeo(it) }
@@ -212,6 +225,21 @@ inline fun Interpreter.plusPrivateLeo(rhs: Script): Leo<Interpreter> =
 	}
 
 inline fun Interpreter.plusUseOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	rhs.useOrNull.leo.nullableBind {
+		plusLeo(it)
+	}
+
+inline fun Interpreter.plusValueOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	rhs
+		.matchEmpty {
+			value.textOrNull?.let {
+				value(valueName fieldTo it.scriptOrThrow.value)
+			}
+		}
+		.leo
+		.nullableBind { setLeo(it) }
+
+inline fun Interpreter.plusValueLeo(rhs: Script): Leo<Interpreter?> =
 	rhs.useOrNull.leo.nullableBind {
 		plusLeo(it)
 	}

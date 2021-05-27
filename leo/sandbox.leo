@@ -1,6 +1,6 @@
-use library text
-use library int
+use library number
 
-"Hello, "
-append "world!"
-length.number.int
+point
+  x 10.increment
+  y 20
+value.text.value.text.value

@@ -611,4 +611,25 @@ class InterpreterTest {
 			.interpret
 			.assertEqualTo(script(isName lineTo script(noName)))
 	}
+
+	@Test
+	fun valueText() {
+		script(
+			"foo" lineTo script("bar"),
+			line(valueName),
+			line(textName)
+		)
+			.interpret
+			.assertEqualTo(script(literal("foo bar\n")))
+	}
+
+	@Test
+	fun textValue() {
+		script(
+			line(literal("foo bar\n")),
+			line(valueName)
+		)
+			.interpret
+			.assertEqualTo(script(valueName lineTo script("foo" lineTo script("bar"))))
+	}
 }

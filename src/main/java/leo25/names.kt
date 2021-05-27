@@ -42,5 +42,6 @@ val timesName = "times"
 val traceName = "trace"
 val tryName = "try"
 val useName = "use"
+val valueName = "value"
 val yesName = "yes"
 
