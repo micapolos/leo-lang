@@ -1,7 +1,9 @@
 package leo25.natives
 
-import leo14.*
 import leo14.Number
+import leo14.lineTo
+import leo14.literal
+import leo14.script
 import leo14.untyped.typed.loadClass
 import leo15.arrayName
 import leo25.*
@@ -320,14 +322,14 @@ val javaClassMethodNameTextDefinition
 											.toTypedArray()))))))
 		}
 
-val javaObjectInvokeJavaMethodDefinition
+val javaMethodInvokeDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(objectName lineTo script(anyName)),
+				javaName lineTo script(anyName),
 				invokeName lineTo script(
-					methodName lineTo script(javaName lineTo script(objectName lineTo script(anyName))),
-					argsName lineTo script(javaName lineTo script(objectName lineTo script(anyName)))
+					methodName lineTo script(javaName lineTo script(anyName)),
+					argsName lineTo script(javaName lineTo script(anyName))
 				)
 			)
 		) {
@@ -344,14 +346,12 @@ val javaObjectInvokeJavaMethodDefinition
 								.invoke(
 									this
 										.nativeValue(javaName)
-										.nativeValue(objectName)
-										.nativeObject,
+										.javaObject,
 									*this
 										.nativeValue(invokeName)
 										.nativeValue(argsName)
 										.nativeValue(javaName)
-										.nativeValue(objectName)
-										.nativeObject as Array<*>
+										.javaObject as Array<*>
 								)
 						)
 					)

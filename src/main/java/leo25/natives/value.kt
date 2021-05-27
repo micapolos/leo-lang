@@ -38,3 +38,6 @@ val Value.nativeArrayElement: Any?
 	get() =
 		nativeValue(javaName).nativeValue(objectName).nativeObject
 
+val Value.javaObject: Any?
+	get() =
+		nativeValue(objectName).nativeObject

@@ -29,4 +29,4 @@ val nativeDictionary: Dictionary
 			.plus(javaFieldGetDefinition)
 
 			.plus(javaClassMethodNameTextDefinition)
-			.plus(javaObjectInvokeJavaMethodDefinition)
+			.plus(javaMethodInvokeDefinition)
