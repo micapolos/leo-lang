@@ -141,34 +141,29 @@ fun Resolution.merge(resolution: Resolution): Resolution =
 fun Resolution?.orNullMerge(resolution: Resolution): Resolution =
 	this?.merge(resolution) ?: resolution
 
-fun Dictionary.switchOrNullLeo(value: Value, script: Script): Leo<Value?> =
-	value.bodyOrNull?.let { switchBodyOrNull(it, script) } ?: leo(null)
+fun Dictionary.switchLeo(value: Value, script: Script): Leo<Value> =
+	switchLeo(value.switchFieldOrThrow, script)
 
-fun Dictionary.switchBodyOrNull(value: Value, script: Script): Leo<Value?> =
-	value.fieldOrNull?.let {
-		switchOrNullLeo(it, script)
-	} ?: leo(null)
-
-fun Dictionary.switchOrNullLeo(line: Field, script: Script): Leo<Value?> =
+fun Dictionary.switchLeo(field: Field, script: Script): Leo<Value> =
 	when (script) {
-		is LinkScript -> switchOrNullLeo(line, script.link)
-		is UnitScript -> leo(null)
+		is LinkScript -> switchLeo(field, script.link)
+		is UnitScript -> value("nonexaustive").throwError()
 	}
 
-fun Dictionary.switchOrNullLeo(line: Field, scriptLink: ScriptLink): Leo<Value?> =
-	switchOrNullLeo(line, scriptLink.line).or {
-		switchOrNullLeo(line, scriptLink.lhs)
+fun Dictionary.switchLeo(field: Field, scriptLink: ScriptLink): Leo<Value> =
+	switchOrNullLeo(field, scriptLink.line).or {
+		switchLeo(field, scriptLink.lhs)
 	}
 
-fun Dictionary.switchOrNullLeo(line: Field, scriptLine: ScriptLine): Leo<Value?> =
+fun Dictionary.switchOrNullLeo(field: Field, scriptLine: ScriptLine): Leo<Value?> =
 	when (scriptLine) {
-		is FieldScriptLine -> switchOrNullLeo(line, scriptLine.field)
+		is FieldScriptLine -> switchOrNullLeo(field, scriptLine.field)
 		is LiteralScriptLine -> leo(null)
 	}
 
-fun Dictionary.switchOrNullLeo(line: Field, scriptField: ScriptField): Leo<Value?> =
-	ifOrNull(line.name == scriptField.name) {
-		context.interpreter(value(line)).plusLeo(scriptField.rhs).map { it.value }
+fun Dictionary.switchOrNullLeo(field: Field, scriptField: ScriptField): Leo<Value?> =
+	ifOrNull(field.name == scriptField.name) {
+		context.interpreter(value(field)).plusLeo(scriptField.rhs).map { it.value }
 	} ?: leo(null)
 
 fun Dictionary.applyLeo(body: Body, given: Value): Leo<Value> =

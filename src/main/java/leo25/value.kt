@@ -72,6 +72,10 @@ val Value.structureOrThrow: Structure
 	get() =
 		structureOrNull.notNullOrThrow { plus(notName fieldTo value("structure")) }
 
+val Value.switchFieldOrThrow: Field
+	get() =
+		structureOrThrow.value.fieldOrNull.notNullOrThrow { plus(switchName fieldTo value()) }
+
 val Value.resolveLeo: Leo<Value>
 	get() =
 		resolveFunctionApplyOrNullLeo.or { resolve.leo }

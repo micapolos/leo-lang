@@ -306,7 +306,7 @@ class DictionaryTest {
 	@Test
 	fun switchOrNull() {
 		dictionary()
-			.switchOrNullLeo(
+			.switchLeo(
 				value("shape" fieldTo value("circle" fieldTo value("radius" fieldTo value("zero")))),
 				script(
 					"circle" lineTo script("radius"),
