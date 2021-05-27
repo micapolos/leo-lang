@@ -4,7 +4,8 @@ private
     be "java.lang.String".class.java.class
 
   let
-    length.method
+    length string
+    method
     be
       string.class
       method
@@ -12,7 +13,8 @@ private
         args array.java
 
   let
-    concat.method
+    concat string
+    method
     be
       string.class
       method
@@ -23,8 +25,7 @@ let
   text any
   length
   do
-    quote length
-    method
+    string.length.method
     invoke
       text.java
       args array.java
@@ -38,7 +39,7 @@ let
   text any
   append text any
   do
-    concat.method
+    string.concat.method
     invoke
       text.java
       args append.text.java.element.array.java
