@@ -74,8 +74,7 @@ inline fun Interpreter.plusLeo(scriptField: ScriptField): Leo<Interpreter> =
 	}
 
 inline fun Interpreter.plusDefinitionsOrNullLeo(scriptField: ScriptField): Leo<Interpreter?> =
-	if (!value.isEmpty) leo(null)
-	else dictionary.definitionSeqOrNullLeo(scriptField).nullableMap { definitionSeq ->
+	dictionary.definitionSeqOrNullLeo(scriptField).nullableMap { definitionSeq ->
 		set(context.fold(definitionSeq.reverse) { plus(it) })
 	}
 
