@@ -8,19 +8,19 @@ import leo25.*
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-val nullObjectJavaDefinition
+val nullJavaDefinition
 	get() =
 		nativeDefinition(script(line(nullName), line(javaName))) {
 			null.javaValue
 		}
 
-val trueObjectJavaDefinition
+val trueJavaDefinition
 	get() =
 		nativeDefinition(script(line(trueName), line(javaName))) {
 			true.javaValue
 		}
 
-val falseObjectJavaDefinition
+val falseJavaDefinition
 	get() =
 		nativeDefinition(script(line(falseName), line(javaName))) {
 			false.javaValue
@@ -30,15 +30,19 @@ val javaObjectClassDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(anyName),
-				getName lineTo script(className lineTo script())
+				objectName lineTo script(javaName lineTo script(anyName)),
+				className lineTo script()
 			)
 		) {
-			this
-				.nativeValue(javaName)
-				.javaObject!!
-				.javaClass
-				.javaValue
+			value(
+				className fieldTo
+					this
+						.nativeValue(objectName)
+						.nativeValue(javaName)
+						.javaObject!!
+						.javaClass
+						.javaValue
+			)
 		}
 
 val textJavaDefinition

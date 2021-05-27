@@ -7,9 +7,9 @@ import leo25.plus
 val nativeDictionary: Dictionary
 	get() =
 		dictionary()
-			.plus(nullObjectJavaDefinition)
-			.plus(trueObjectJavaDefinition)
-			.plus(falseObjectJavaDefinition)
+			.plus(nullJavaDefinition)
+			.plus(trueJavaDefinition)
+			.plus(falseJavaDefinition)
 
 			.plus(javaObjectClassDefinition)
 			.plus(arrayJavaDefinition)

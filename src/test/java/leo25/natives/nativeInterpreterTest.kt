@@ -29,14 +29,15 @@ class NativeInterpreterTest {
 	}
 
 	@Test
-	fun javaClassJava() {
+	fun javaObjectClassJava() {
 		script(
 			line(literal("foo")),
 			javaName lineTo script(),
-			getName lineTo script(className lineTo script())
+			objectName lineTo script(),
+			className lineTo script()
 		)
 			.interpret
-			.assertEqualTo(script(javaName lineTo native("foo".javaClass)))
+			.assertEqualTo(script(className lineTo script(javaName lineTo native("foo".javaClass))))
 	}
 
 	@Test
