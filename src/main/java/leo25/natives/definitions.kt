@@ -129,16 +129,13 @@ val textClassJavaDefinition
 		nativeDefinition(
 			script(
 				className lineTo script(
-					nameName lineTo script(
-						textName lineTo script(anyName)
-					)
+					textName lineTo script(anyName)
 				),
 				javaName lineTo script()
 			)
 		) {
 			this
 				.nativeValue(className)
-				.nativeValue(nameName)
 				.nativeValue(textName)
 				.nativeText
 				.loadClass

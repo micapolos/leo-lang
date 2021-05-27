@@ -112,7 +112,6 @@ class NativeInterpreterTest {
 	fun textNameClassJava() {
 		script(
 			line(literal("java.lang.String")),
-			nameName lineTo script(),
 			className lineTo script(),
 			javaName lineTo script()
 		)
@@ -124,7 +123,6 @@ class NativeInterpreterTest {
 	fun javaClassField() {
 		script(
 			line(literal("java.lang.Integer")),
-			nameName lineTo script(),
 			className lineTo script(),
 			javaName lineTo script(),
 			className lineTo script(),
@@ -148,7 +146,6 @@ class NativeInterpreterTest {
 	fun javaFieldGet() {
 		script(
 			line(literal("java.lang.Integer")),
-			nameName lineTo script(),
 			className lineTo script(),
 			javaName lineTo script(),
 			className lineTo script(),
@@ -171,7 +168,6 @@ class NativeInterpreterTest {
 	fun classJavaObjectMethod() {
 		script(
 			line(literal("java.lang.String")),
-			nameName lineTo script(),
 			className lineTo script(),
 			javaName lineTo script(),
 			className lineTo script(),
@@ -196,7 +192,6 @@ class NativeInterpreterTest {
 	fun javaObjectInvokeMethod() {
 		script(
 			line(literal("java.lang.String")),
-			nameName lineTo script(),
 			className lineTo script(),
 			javaName lineTo script(),
 			className lineTo script(),
