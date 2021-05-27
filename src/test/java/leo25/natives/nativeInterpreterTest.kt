@@ -225,20 +225,20 @@ class NativeInterpreterTest {
 	@Test
 	fun javaObjectInvokeMethod() {
 		script(
-			line(literal("Hello, world!")),
+			line(literal("java.lang.String")),
+			nameName lineTo script(),
+			className lineTo script(),
 			objectName lineTo script(),
 			javaName lineTo script(),
+			className lineTo script(),
+			methodName lineTo script(
+				nameName lineTo script(literal("length")),
+				typesName lineTo script(line(arrayName), line(objectName), line(javaName))
+			),
 			invokeName lineTo script(
-				line(literal("java.lang.String")),
-				nameName lineTo script(),
-				className lineTo script(),
+				line(literal("Hello, world!")),
 				objectName lineTo script(),
 				javaName lineTo script(),
-				className lineTo script(),
-				methodName lineTo script(
-					nameName lineTo script(literal("length")),
-					typesName lineTo script(line(arrayName), line(objectName), line(javaName))
-				),
 				argsName lineTo script(line(arrayName), line(objectName), line(javaName))
 			)
 		)

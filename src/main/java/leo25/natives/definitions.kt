@@ -8,6 +8,7 @@ import leo14.untyped.typed.loadClass
 import leo15.arrayName
 import leo25.*
 import java.lang.reflect.Field
+import java.lang.reflect.Method
 
 val nullObjectJavaDefinition
 	get() =
@@ -326,9 +327,9 @@ val javaMethodInvokeDefinition
 	get() =
 		nativeDefinition(
 			script(
-				javaName lineTo script(anyName),
+				methodName lineTo script(javaName lineTo script(anyName)),
 				invokeName lineTo script(
-					methodName lineTo script(javaName lineTo script(anyName)),
+					javaName lineTo script(anyName),
 					argsName lineTo script(javaName lineTo script(anyName))
 				)
 			)
@@ -338,13 +339,13 @@ val javaMethodInvokeDefinition
 					objectName fieldTo rhs(
 						native(
 							this
-								.nativeValue(invokeName)
 								.nativeValue(methodName)
 								.nativeValue(javaName)
-								.nativeValue(objectName)
-								.nativeMethod
+								.javaObject
+								.run { this as Method }
 								.invoke(
 									this
+										.nativeValue(invokeName)
 										.nativeValue(javaName)
 										.javaObject,
 									*this
