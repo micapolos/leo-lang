@@ -1,23 +1,23 @@
 private
   let
     string.class
-    be "java.lang.String".name.class.object.java.class
+    be "java.lang.String".class.java.class
 
   let
     length.method
     be
       string.class
       method
-        name "length"
-        types array.object.java
+        "length"
+        args array.java
 
   let
     concat.method
     be
       string.class
       method
-        name "concat"
-        types string.class.java.element.array.object.java
+        "concat"
+        args string.class.java.element.array.java
 
 let
   text any
@@ -26,8 +26,8 @@ let
     quote length
     method
     invoke
-      text.object.java
-      args array.object.java
+      text.java
+      args array.java
     integer.number.length
 
 test
@@ -40,8 +40,8 @@ let
   do
     concat.method
     invoke
-      text.object.java
-      args append.text.object.java.element.array.object.java
+      text.java
+      args append.text.java.element.array.java
     text
 
 test

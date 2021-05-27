@@ -1,32 +1,32 @@
 private
   let
     integer.class
-    be "java.lang.Integer".name.class.object.java.class
+    be "java.lang.Integer".class.java.class
 
   test
     integer.class.quote
-    equals "class java.lang.Integer".native.object.java.class
+    equals "class java.lang.Integer".native.java.class
 
   let
     kt int
     class
-    be "leo16.native.IntKt".name.class.object.java.class
+    be "leo16.native.IntKt".class.java.class
 
   test
     int.kt.class.quote
-    equals class java object native "class leo16.native.IntKt"
+    equals "class leo16.native.IntKt".native.java.class
 
   let
     int.class
     be
       integer.class
-      field name "TYPE"
-      get null.object.java
+      field "TYPE"
+      get null.java
       class
 
   test
     int.class.quote
-    equals "int".native.object.java.class
+    equals "int".native.java.class
 
   private
     let
@@ -35,11 +35,11 @@ private
       do
         int.kt.class
         method
-          name op.text
-          types
+          op.text
+          args
             element int.class.java
             element int.class.java
-            array.object.java
+            array.java
 
   let
     plus.method
@@ -47,7 +47,7 @@ private
 
   test
     plus.method.quote
-    equals "public static final int leo16.native.IntKt.plus(int,int)".native.object.java.method
+    equals "public static final int leo16.native.IntKt.plus(int,int)".native.java.method
 
   let
     minus.method
@@ -55,7 +55,7 @@ private
 
   test
     minus.method.quote
-    equals "public static final int leo16.native.IntKt.minus(int,int)".native.object.java.method
+    equals "public static final int leo16.native.IntKt.minus(int,int)".native.java.method
 
   let
     times.method
@@ -63,16 +63,16 @@ private
 
   test
     times.method.quote
-    equals "public static final int leo16.native.IntKt.times(int,int)".native.object.java.method
+    equals "public static final int leo16.native.IntKt.times(int,int)".native.java.method
 
 let
   number any
   int
-  do number.integer.object.java.int
+  do number.integer.java.int
 
 test
   123.int.quote
-  equals "123".native.object.java.int
+  equals "123".native.java.int
 
 let
   int any
@@ -85,7 +85,7 @@ let
       args
         element int.java
         element plus.int.java
-        array.object.java
+        array.java
     int
 
 test
@@ -104,7 +104,7 @@ let
       args
         element int.java
         element minus.int.java
-        array.object.java
+        array.java
     int
 
 test
@@ -123,7 +123,7 @@ let
       args
         element int.java
         element times.int.java
-        array.object.java
+        array.java
     int
 
 test

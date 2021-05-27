@@ -2,19 +2,19 @@ let
   number any
   plus number any
   do
-    "leo25.natives.NumberKt".name.class.object.java.class
+    "leo25.natives.NumberKt".class.java.class
     method
-      name "plus"
-      types
-        element "leo14.Number".name.class.object.java
-        element "leo14.Number".name.class.object.java
-        array.object.java
-    invoke
-      null.object.java
+      "plus"
       args
-        element number.object.java
-        element plus.number.object.java
-        array.object.java
+        element "leo14.Number".class.java
+        element "leo14.Number".class.java
+        array.java
+    invoke
+      null.java
+      args
+        element number.java
+        element plus.number.java
+        array.java
     number
 
 test
@@ -26,19 +26,19 @@ let
   number any
   minus number any
   do
-    "leo25.natives.NumberKt".name.class.object.java.class
+    "leo25.natives.NumberKt".class.java.class
     method
-      name "minus"
-      types
-        element "leo14.Number".name.class.object.java
-        element "leo14.Number".name.class.object.java
-        array.object.java
-    invoke
-      null.object.java
+      "minus"
       args
-        element number.object.java
-        element minus.number.object.java
-        array.object.java
+        element "leo14.Number".class.java
+        element "leo14.Number".class.java
+        array.java
+    invoke
+      null.java
+      args
+        element number.java
+        element minus.number.java
+        array.java
     number
 
 test
@@ -50,19 +50,19 @@ let
   number any
   times number any
   do
-    "leo25.natives.NumberKt".name.class.object.java.class
+    "leo25.natives.NumberKt".class.java.class
     method
-      name "times"
-      types
-        element "leo14.Number".name.class.object.java
-        element "leo14.Number".name.class.object.java
-        array.object.java
-    invoke
-      null.object.java
+      "times"
       args
-        element number.object.java
-        element times.number.object.java
-        array.object.java
+        element "leo14.Number".class.java
+        element "leo14.Number".class.java
+        array.java
+    invoke
+      null.java
+      args
+        element number.java
+        element times.number.java
+        array.java
     number
 
 test
