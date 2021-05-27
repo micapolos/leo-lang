@@ -18,6 +18,7 @@ use test set
 use test structure
 use test switch
 use test take
+use test test
 use test text
 use test try
 use test update
