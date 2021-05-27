@@ -6,7 +6,7 @@ comment
     in the current scope
     binding given value fields
 
-script
+quote
   "Hello, "
   append text
 evaluate "world!"

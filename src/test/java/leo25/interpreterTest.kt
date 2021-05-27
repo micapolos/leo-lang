@@ -328,10 +328,10 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun script_() {
+	fun quote() {
 		script(
 			"foo" lineTo script(),
-			scriptName lineTo script(hashName)
+			quoteName lineTo script(hashName)
 		)
 			.interpret
 			.assertEqualTo(
@@ -345,7 +345,7 @@ class InterpreterTest {
 	@Test
 	fun evaluate() {
 		script(
-			scriptName lineTo script(hashName),
+			quoteName lineTo script(hashName),
 			evaluateName lineTo script()
 		)
 			.interpret
@@ -355,7 +355,7 @@ class InterpreterTest {
 	@Test
 	fun evaluate_with() {
 		script(
-			scriptName lineTo script(
+			quoteName lineTo script(
 				line(literal("Hello, world!")),
 				"ok" lineTo script()
 			),

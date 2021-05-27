@@ -23,7 +23,7 @@ let
   text any
   length
   do
-    script length
+    quote length
     method
     invoke
       text.object.java

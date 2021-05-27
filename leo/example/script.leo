@@ -1,10 +1,10 @@
 use library text
 
 comment
-  script
+  quote
     gives unevaluated code
     and works like quote in lisp
     
-script
+quote
   "Hello, "
   append "world!"

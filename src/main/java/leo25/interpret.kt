@@ -4,13 +4,12 @@ import leo.base.orIfNull
 import leo14.Script
 import leo25.natives.nativeDictionary
 import leo25.parser.scriptOrNull
-import leo25.parser.scriptOrThrow
 
 val String.interpret: String
 	get() =
 		scriptOrNull
 			?.run { interpret }
-			.orIfNull { value(scriptName).errorValue.script }
+			.orIfNull { value(quoteName).errorValue.script }
 			.string
 
 val Script.interpret: Script

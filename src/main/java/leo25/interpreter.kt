@@ -85,7 +85,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		isName -> plusIsLeo(scriptField.rhs)
 		equalsName -> plusEqualsLeo(scriptField.rhs)
 		privateName -> plusPrivateLeo(scriptField.rhs)
-		scriptName -> plusScriptLeo(scriptField.rhs)
+		quoteName -> plusQuoteLeo(scriptField.rhs)
 		switchName -> plusSwitchOrNullLeo(scriptField.rhs)
 		repeatName -> plusRepeatLeo(scriptField.rhs)
 		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
@@ -178,7 +178,7 @@ inline fun Interpreter.plusEqualsLeo(rhs: Script): Leo<Interpreter?> =
 		setLeo(value.equals(it).equalsValue)
 	}
 
-inline fun Interpreter.plusScriptLeo(rhs: Script): Leo<Interpreter> =
+inline fun Interpreter.plusQuoteLeo(rhs: Script): Leo<Interpreter> =
 	setLeo(value.script.plus(rhs).value)
 
 inline fun Interpreter.plusSwitchOrNullLeo(rhs: Script): Leo<Interpreter?> =
