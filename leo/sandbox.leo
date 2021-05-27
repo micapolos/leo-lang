@@ -1,10 +1,12 @@
-use library number
-use library text
-
-point
-  with
-    2
-    plus 2
-  with
-    "Hello, "
-    append "world!"
+"java.lang.String".class.java.class
+method
+  "concat"
+  args
+    element "java.lang.String".class.java
+    array.java
+invoke
+  "Hello, ".java
+  args
+    element "world!".java
+    array.java
+text
