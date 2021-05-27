@@ -103,6 +103,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		textName -> plusTextOrNullLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		tryName -> plusTryLeo(scriptField.rhs)
+		updateName -> plusUpdateLeo(scriptField.rhs)
 		useName -> plusUseOrNullLeo(scriptField.rhs)
 		valueName -> plusValueOrNullLeo(scriptField.rhs)
 		withName -> plusWithLeo(scriptField.rhs)
@@ -212,6 +213,12 @@ inline fun Interpreter.plusTryLeo(rhs: Script): Leo<Interpreter> =
 	else dictionary.valueLeo(rhs)
 		.bind { value -> setLeo(value(tryName fieldTo value(successName fieldTo value))) }
 		.catch { throwable -> setLeo(value(tryName fieldTo throwable.value)) }
+
+inline fun Interpreter.plusUpdateLeo(rhs: Script): Leo<Interpreter> =
+	dictionary.updateOrNullLeo(value, rhs).bind { value ->
+		if (value == null) leo.also { value("error").throwError() }
+		else setLeo(value)
+	}
 
 inline fun Interpreter.plusDynamicLeo(scriptField: ScriptField): Leo<Interpreter> =
 	dictionary.fieldLeo(scriptField).bind {

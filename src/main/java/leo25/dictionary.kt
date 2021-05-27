@@ -230,3 +230,38 @@ fun Dictionary.letBeDefinitionOrNull(rhs: Script): Leo<Definition?> =
 			definition(pattern(lhs), binding(value)).leo
 		}
 	} ?: leo(null)
+
+fun Dictionary.updateOrNullLeo(value: Value, script: Script): Leo<Value?> =
+	value.fieldOrNull?.let { field ->
+		field.rhs.valueOrNull?.let { rhs ->
+			updateStructureOrNullLeo(rhs, script).nullableMap { rhs ->
+				value(field.name fieldTo rhs)
+			}
+		}
+	} ?: leo(null)
+
+fun Dictionary.updateStructureOrNullLeo(value: Value, script: Script): Leo<Value?> =
+	value.orNull.leo.fold(script.lineSeq.reverse.map { fieldOrNull }) { fieldOrNull ->
+		nullableBind { value ->
+			if (fieldOrNull == null) leo(null)
+			else updateStructureOrNullLeo(value, fieldOrNull)
+		}
+	}
+
+fun Dictionary.updateStructureOrNullLeo(value: Value, scriptField: ScriptField): Leo<Value?> =
+	when (value) {
+		EmptyValue -> leo(null)
+		is LinkValue ->
+			updateStructureOrNullLeo(value.link, scriptField)
+				.nullableBind { value(it).leo }
+	}
+
+fun Dictionary.updateStructureOrNullLeo(link: Link, scriptField: ScriptField): Leo<Link?> =
+	if (link.field.name == scriptField.name)
+		link.field.rhs.valueOrNull.leo.nullableBind { rhs ->
+			context.interpreter(rhs).plusLeo(scriptField.rhs).map { rhs ->
+				(link.value linkTo (scriptField.name fieldTo rhs.value))
+			}
+		}
+	else updateStructureOrNullLeo(link.value, scriptField)
+		.nullableMap { it linkTo link.field }

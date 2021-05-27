@@ -717,4 +717,31 @@ class InterpreterTest {
 				)
 			)
 	}
+
+	@Test
+	fun update() {
+		script(
+			"point" lineTo script(
+				"x" lineTo script("zero"),
+				"y" lineTo script("one"),
+				"x" lineTo script("two")
+			),
+			updateName lineTo script(
+				"y" lineTo script("done"),
+				"x" lineTo script("updated")
+			)
+		)
+			.interpret
+			.assertEqualTo(
+				script(
+					"point" lineTo script(
+						"x" lineTo script("zero"),
+						"y" lineTo script("done" lineTo script("one")),
+						"x" lineTo script("updated" lineTo script("two"))
+					)
+				)
+			)
+
+
+	}
 }

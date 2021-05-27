@@ -1,6 +1,6 @@
 comment
   set
-    sets field values
+    sets selected field values
 
 point
   x 10
