@@ -199,9 +199,7 @@ val javaClassMethodNameTextDefinition
 					javaName lineTo script(anyName)
 				),
 				methodName lineTo script(
-					nameName lineTo script(
-						textName lineTo script(anyName)
-					),
+					textName lineTo script(anyName),
 					typesName lineTo script(
 						javaName lineTo script(anyName)
 					)
@@ -217,7 +215,6 @@ val javaClassMethodNameTextDefinition
 					.getMethod(
 						this
 							.nativeValue(methodName)
-							.nativeValue(nameName)
 							.nativeValue(textName)
 							.nativeText,
 						*this
