@@ -200,7 +200,7 @@ val javaClassMethodNameTextDefinition
 				),
 				methodName lineTo script(
 					textName lineTo script(anyName),
-					typesName lineTo script(
+					argsName lineTo script(
 						javaName lineTo script(anyName)
 					)
 				)
@@ -219,7 +219,7 @@ val javaClassMethodNameTextDefinition
 							.nativeText,
 						*this
 							.nativeValue(methodName)
-							.nativeValue(typesName)
+							.nativeValue(argsName)
 							.nativeValue(javaName)
 							.javaObject
 							.run { this as Array<*> }

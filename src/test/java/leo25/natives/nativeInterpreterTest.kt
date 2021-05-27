@@ -169,7 +169,7 @@ class NativeInterpreterTest {
 			className lineTo script(),
 			methodName lineTo script(
 				line(literal("length")),
-				typesName lineTo script(
+				argsName lineTo script(
 					line(arrayName), line(javaName)
 				)
 			)
@@ -193,7 +193,7 @@ class NativeInterpreterTest {
 			className lineTo script(),
 			methodName lineTo script(
 				line(literal("length")),
-				typesName lineTo script(line(arrayName), line(javaName))
+				argsName lineTo script(line(arrayName), line(javaName))
 			),
 			invokeName lineTo script(
 				line(literal("Hello, world!")),
