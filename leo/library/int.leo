@@ -8,12 +8,12 @@ private
     equals "class java.lang.Integer".native.object.java.class
 
   let
-    leo int
+    kt int
     class
     be "leo16.native.IntKt".name.class.object.java.class
 
   test
-    int.leo.class.script
+    int.kt.class.script
     equals class java object native "class leo16.native.IntKt"
 
   let
@@ -33,7 +33,7 @@ private
       op text any
       method
       do
-        int.leo.class
+        int.kt.class
         method
           name op.text
           types
@@ -42,30 +42,27 @@ private
             array.object.java
 
   let
-    leo int plus
-    method
+    plus.method
     be "plus".op.method
 
   test
-    plus.int.leo.method.script
+    plus.method.script
     equals "public static final int leo16.native.IntKt.plus(int,int)".native.object.java.method
 
   let
-    leo int minus
-    method
+    minus.method
     be "minus".op.method
 
   test
-    minus.int.leo.method.script
+    minus.method.script
     equals "public static final int leo16.native.IntKt.minus(int,int)".native.object.java.method
 
   let
-    leo int times
-    method
+    times.method
     be "times".op.method
 
   test
-    times.int.leo.method.script
+    times.method.script
     equals "public static final int leo16.native.IntKt.times(int,int)".native.object.java.method
 
 let
@@ -81,10 +78,10 @@ let
   int any
   plus int any
   do
-    int.java
+    script plus
+    method
     invoke
-      script plus
-      int.leo.method
+      int.java
       args
         element int.java
         element plus.int.java
@@ -100,10 +97,10 @@ let
   int any
   minus int any
   do
-    int.java
+    script minus
+    method
     invoke
-      script minus
-      int.leo.method
+      int.java
       args
         element int.java
         element minus.int.java
@@ -119,10 +116,10 @@ let
   int any
   times int any
   do
-    int.java
+    script times
+    method
     invoke
-      script times
-      int.leo.method
+      int.java
       args
         element int.java
         element times.int.java

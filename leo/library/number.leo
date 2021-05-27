@@ -9,15 +9,13 @@ let
         element "leo14.Number".name.class.object.java
         element "leo14.Number".name.class.object.java
         array.object.java
-    do
+    invoke
       null.object.java
-      invoke
-        method
-        args
-          element number.object.java
-          element plus.number.object.java
-          array.object.java
-      number
+      args
+        element number.object.java
+        element plus.number.object.java
+        array.object.java
+    number
 
 test
   2
@@ -35,15 +33,13 @@ let
         element "leo14.Number".name.class.object.java
         element "leo14.Number".name.class.object.java
         array.object.java
-    do
+    invoke
       null.object.java
-      invoke
-        method
-        args
-          element number.object.java
-          element minus.number.object.java
-          array.object.java
-      number
+      args
+        element number.object.java
+        element minus.number.object.java
+        array.object.java
+    number
 
 test
   5
@@ -61,15 +57,13 @@ let
         element "leo14.Number".name.class.object.java
         element "leo14.Number".name.class.object.java
         array.object.java
-    do
+    invoke
       null.object.java
-      invoke
-        method
-        args
-          element number.object.java
-          element times.number.object.java
-          array.object.java
-      number
+      args
+        element number.object.java
+        element times.number.object.java
+        array.object.java
+    number
 
 test
   2
