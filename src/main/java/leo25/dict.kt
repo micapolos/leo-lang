@@ -3,7 +3,7 @@ package leo25
 import leo.base.Seq
 import leo13.*
 
-// TODO: Replace with high-performance persistent map implementation (ie: using Trie).
+// TODO: Replace with high-performance persistent implementation (ie: using Trie).
 
 inline class Dict<K, V>(val stack: Stack<Pair<K, V>>)
 
