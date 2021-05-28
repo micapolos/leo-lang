@@ -1,6 +1,7 @@
 use library number
 
-comment recursive fibonacci
+comment
+  recursive fibonacci
 
 test
   16
