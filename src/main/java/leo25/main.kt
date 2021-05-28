@@ -6,7 +6,11 @@ import leo.java.io.inString
 import java.io.File
 
 fun main(args: Array<String>) {
-	readText(args).interpret.print
+	try {
+		readText(args).interpret
+	} catch (e: ValueError) {
+		value("parser" fieldTo e.value).errorValue.string
+	}.print
 }
 
 fun readText(args: Array<String>) =

@@ -4,10 +4,11 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
 import leo.base.Effect
 import leo.base.effect
-import leo.base.notNullIf
 import leo.base.orIfNull
 import leo.java.io.file
+import leo14.Script
 import leo14.literal
+import leo25.parser.scriptOrThrow
 import java.io.IOException
 
 data class Environment(
@@ -37,10 +38,15 @@ val Value.tracedLeo: Leo<Unit>
 
 fun loadLibrary(use: Use): Dictionary =
 	try {
-		use.path.file.readText().dictionary
+		use.path.file.readText().scriptOrThrow
+	} catch (valueError: ValueError) {
+		value(
+			"path" fieldTo value(field(literal(use.path.toString()))),
+			"location" fieldTo valueError.value
+		).throwError<Script>()
 	} catch (ioException: IOException) {
-		value(field(literal(ioException.message ?: ioException.toString()))).throwError()
-	}
+		value(field(literal(ioException.message ?: ioException.toString()))).throwError<Script>()
+	}.dictionary
 
 val traceValueLeo: Leo<Value>
 	get() =
