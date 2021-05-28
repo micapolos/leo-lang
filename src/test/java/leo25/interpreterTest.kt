@@ -544,7 +544,7 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun test_success() {
+	fun testIsEqualSuccess() {
 		script(
 			testName lineTo script(
 				"foo" lineTo script(),
@@ -554,6 +554,20 @@ class InterpreterTest {
 						"foo" lineTo script(),
 						"bar" lineTo script()
 					)
+				)
+			)
+		)
+			.interpret
+			.assertEqualTo(script())
+	}
+
+	@Test
+	fun testIsMatchingSuccess() {
+		script(
+			testName lineTo script(
+				"foo" lineTo script("bar"),
+				isName lineTo script(
+					matchingName lineTo script("foo" lineTo script(anyName))
 				)
 			)
 		)

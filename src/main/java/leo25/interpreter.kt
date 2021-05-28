@@ -98,7 +98,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		repeatName -> plusRepeatLeo(scriptField.rhs)
 		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
 		takeName -> plusTakeLeo(scriptField.rhs)
-		testName -> plusTestLeo(scriptField.rhs)
+		testName -> plusTest2Leo(scriptField.rhs)
 		textName -> plusTextOrNullLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		tryName -> plusTryLeo(scriptField.rhs)
@@ -176,6 +176,42 @@ inline fun Interpreter.plusTestLeo(test: Script): Leo<Interpreter> =
 			}
 		}
 	}!!
+
+inline fun Interpreter.plusTest2Leo(test: Script): Leo<Interpreter> =
+	test.matchInfix(isName) { lhs, rhs ->
+		dictionary.valueLeo(test).bind { result ->
+			when (result) {
+				true.isValue -> leo
+				false.isValue ->
+					dictionary.valueLeo(lhs).bind { lhs ->
+						dictionary.valueLeo(rhs).bind { rhs ->
+							leo.also {
+								value(testName fieldTo test.value)
+									.plus(
+										causeName fieldTo
+											lhs.plus(isName fieldTo value(notName fieldTo rhs))
+									).throwError()
+							}
+						}
+					}
+				else -> leo.also {
+					value(
+						testName fieldTo result.plus(
+							isName fieldTo value(
+								notName fieldTo value(
+									matchingName fieldTo value(
+										isName fieldTo value(anyName)
+									)
+								)
+							)
+						)
+					).throwError()
+				}
+			}
+		}
+	}.notNullOrThrow {
+		value(syntaxName fieldTo value(testName fieldTo test.value))
+	}
 
 inline fun Interpreter.plusDoingOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	rhs.orNullIf(rhs.isEmpty).leo.nullableBind {
