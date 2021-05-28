@@ -89,10 +89,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		quoteName -> plusQuoteLeo(scriptField.rhs)
 		setName -> plusSetLeo(scriptField.rhs)
 		switchName -> plusSwitchLeo(scriptField.rhs)
-//		repeatName -> plusRepeatLeo(scriptField.rhs)
-//		recurseName -> plusRecurseOrNullLeo(scriptField.rhs)
 		testName -> plusTest2Leo(scriptField.rhs)
-		textName -> plusTextOrNullLeo(scriptField.rhs)
 		traceName -> plusTraceOrNullLeo(scriptField.rhs)
 		tryName -> plusTryLeo(scriptField.rhs)
 		updateName -> plusUpdateLeo(scriptField.rhs)
@@ -109,10 +106,9 @@ inline fun Interpreter.plusDynamicOrNullLeo(field: Field): Leo<Interpreter?> =
 		exampleName -> plusExampleLeo(field.rhs)
 		failName -> plusFailLeo(field.rhs)
 		hashName -> plusHashOrNullLeo(field.rhs)
-//		isName -> plusIsOrNullLeo(scriptField.rhs)
 		repeatName -> plusRepeatLeo(field.rhs)
 		takeName -> plusTakeLeo(field.rhs)
-//		textName -> plusTextOrNullLeo(scriptField.rhs)
+		textName -> plusTextOrNullLeo(field.rhs)
 		valueName -> plusValueOrNullLeo(field.rhs)
 		else -> leo(null)
 	}
@@ -131,13 +127,12 @@ inline fun Interpreter.plusTakeLeo(rhs: Rhs): Leo<Interpreter> =
 		}
 	}
 
-inline fun Interpreter.plusTextOrNullLeo(rhs: Script): Leo<Interpreter?> =
-	rhs
-		.matchEmpty {
-			value.resolvePrefixOrNull(valueName) {
-				value(field(literal(it.string)))
-			}
+inline fun Interpreter.plusTextOrNullLeo(rhs: Rhs): Leo<Interpreter?> =
+	rhs.valueOrNull?.resolveEmptyOrNull {
+		value.resolvePrefixOrNull(valueName) {
+			value(field(literal(it.string)))
 		}
+	}
 		.leo
 		.nullableBind { setLeo(it) }
 
