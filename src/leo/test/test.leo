@@ -1,17 +1,17 @@
 test
   test
     foo
-    equals foo
-  equals
+    is equal foo
+  is equal
 
 test
   try test
     foo
-    equals bar
-  equals quote try error
+    is equal bar
+  is equal quote try error
     test
       foo
-      equals bar
+      is equal bar
     cause
       foo
-      not equals bar
+      is not equal bar

@@ -1,13 +1,13 @@
 test
   "Hello, world!"
   as text any
-  equals "Hello, world!"
+  is equal "Hello, world!"
 
 test
   try 
     "Hello, world!"
     as number any
-  equals quote try error
+  is equal quote try error
     "Hello, world!"
     as number any
 
@@ -15,7 +15,7 @@ test
   try
     "Hello, world!"
     as text
-  equals quote try error
+  is equal quote try error
     "Hello, world!"
     as text
 
@@ -24,6 +24,6 @@ test
     x 10
     y 20
   as point any
-  equals point
+  is equal point
     x 10
     y 20

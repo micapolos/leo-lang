@@ -1,14 +1,14 @@
 test
   10.hash
-  is hash number any
-  equals quote is yes
+  is matching hash number any
+  is equal quote is yes
 
 test
   10.hash
-  equals 10.hash
-  equals quote equals yes
+  is equal 10.hash
+  is equal quote is yes
 
 test
   10.hash
-  equals 20.hash
-  equals quote equals no
+  is equal 20.hash
+  is equal quote is no

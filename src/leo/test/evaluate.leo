@@ -5,4 +5,4 @@ test
       y 20
     x
   evaluate
-  equals x 10
+  is equal x 10

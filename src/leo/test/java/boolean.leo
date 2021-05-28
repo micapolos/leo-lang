@@ -2,10 +2,10 @@ test
   true.java
   as java any
   quote
-  equals java native "true"
+  is equal java native "true"
 
 test
   false.java
   as java any
   quote
-  equals java native "false"
+  is equal java native "false"

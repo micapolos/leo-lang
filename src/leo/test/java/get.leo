@@ -4,4 +4,4 @@ test
   get null.java
   as java any
   quote
-  equals java native "int"
+  is equal java native "int"

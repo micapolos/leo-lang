@@ -3,7 +3,7 @@ test
     x 10
     y 20
   set x 30
-  equals point
+  is equal point
     x 30
     y 20
 
@@ -15,7 +15,7 @@ test
   set
     x 40
     z 50
-  equals point
+  is equal point
     x 40
     y 20
     z 50
@@ -26,4 +26,4 @@ test
       x 10
       y 20
     set z 30
-  equals quote try error no field z
+  is equal quote try error no field z

@@ -18,4 +18,4 @@ test
           number
           minus 1
           recurse
-  equals 987
+  is equal 987

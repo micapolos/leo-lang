@@ -7,4 +7,4 @@ test
       array.java
   as method java any
   quote
-  equals method java native "public java.lang.String java.lang.String.concat(java.lang.String)"
+  is equal method java native "public java.lang.String java.lang.String.concat(java.lang.String)"

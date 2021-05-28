@@ -14,11 +14,11 @@ test
   update present doing
     present.text
     append "world!"
-  equals "Hello, world!"
+  is equal "Hello, world!"
 
 test
   option absent
   update present doing
     present.text
     append "world!"
-  equals option absent
+  is equal option absent

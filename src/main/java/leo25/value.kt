@@ -311,7 +311,7 @@ fun Value.as_(pattern: Pattern): Value =
 		?.let { this }
 		.notNullOrThrow { plus(value(asName fieldTo pattern.script.value)) }
 
-fun Value.is_(pattern: Pattern): Value =
+fun Value.isMatching(pattern: Pattern): Value =
 	dictionary()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)

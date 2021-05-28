@@ -9,12 +9,12 @@ test
   second 1
   do repeating
     number
-    equals 0
+    is equal 0
     switch
       yes do first.number
       no do
         number
-        equals 1
+        is equal 1
         switch
           yes do second.number
           no do
@@ -25,4 +25,4 @@ test
               first.number
               plus second.number
             repeat
-  equals 987
+  is equal 987

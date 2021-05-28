@@ -9,11 +9,11 @@ let
 
 test
   false.boolean.negate
-  equals true.boolean
+  is equal true.boolean
 
 test
   true.boolean.negate
-  equals false.boolean
+  is equal false.boolean
 
 let
   boolean any
@@ -27,22 +27,22 @@ let
 test
   false.boolean
   and false.boolean
-  equals false.boolean
+  is equal false.boolean
 
 test
   false.boolean
   and true.boolean
-  equals false.boolean
+  is equal false.boolean
 
 test
   true.boolean
   and false.boolean
-  equals false.boolean
+  is equal false.boolean
 
 test
   true.boolean
   and true.boolean
-  equals true.boolean
+  is equal true.boolean
 
 let
   boolean any
@@ -56,19 +56,19 @@ let
 test
   false.boolean
   or false.boolean
-  equals false.boolean
+  is equal false.boolean
 
 test
   false.boolean
   or true.boolean
-  equals true.boolean
+  is equal true.boolean
 
 test
   true.boolean
   or false.boolean
-  equals true.boolean
+  is equal true.boolean
 
 test
   true.boolean
   and true.boolean
-  equals true.boolean
+  is equal true.boolean

@@ -20,7 +20,7 @@ let
 test
   2
   plus 3
-  equals 5
+  is equal 5
 
 let
   number any
@@ -44,7 +44,7 @@ let
 test
   5
   minus 3
-  equals 2
+  is equal 2
 
 let
   number any
@@ -68,7 +68,7 @@ let
 test
   2
   times 3
-  equals 6
+  is equal 6
 
 let
   number any
@@ -89,7 +89,7 @@ let
         array.java
     do
       java
-      equals true.java
+      is equal true.java
       switch
         yes less
         no less
@@ -97,17 +97,17 @@ let
 test
   5
   less than 6
-  equals less yes
+  is equal less yes
 
 test
   5
   less than 5
-  equals less no
+  is equal less no
 
 test
   5
   less than 4
-  equals less no
+  is equal less no
 
 let
   number any
@@ -118,7 +118,7 @@ let
 
 test
   2.increment
-  equals 3
+  is equal 3
 
 let
   number any
@@ -129,4 +129,4 @@ let
 
 test
   2.decrement
-  equals 1
+  is equal 1

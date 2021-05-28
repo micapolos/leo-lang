@@ -4,7 +4,7 @@ test
   with
     z 30
     w 40
-  equals
+  is equal
     x 10
     y 20
     z 30
@@ -14,6 +14,6 @@ test
   x 10
   y 20
   with
-  equals
+  is equal
     x 10
     y 20

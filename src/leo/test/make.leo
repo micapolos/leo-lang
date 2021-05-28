@@ -2,10 +2,10 @@ test
   x 10
   y 20
   point
-  equals point
+  is equal point
     x 10
     y 20
 
 test
   red.color
-  equals color red
+  is equal color red

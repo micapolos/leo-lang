@@ -4,6 +4,6 @@ test
   do
     x
     and y
-  equals
+  is equal
     x 10
     and y 20

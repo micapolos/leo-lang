@@ -1,3 +1,3 @@
 test
   null.java.quote
-  equals java native "null"
+  is equal java native "null"

@@ -2,8 +2,8 @@ test
   "Hello, world!".java
   as java any
   quote
-  equals java native "Hello, world!"
+  is equal java native "Hello, world!"
 
 test
   "Hello, world!".java.text
-  equals "Hello, world!"
+  is equal "Hello, world!"

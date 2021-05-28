@@ -1,13 +1,13 @@
 test
   use test used
   ping
-  equals pong
+  is equal pong
 
 test
   use test used
   foo
-  equals foo
+  is equal foo
 
 test
   try use test missing
-  equals quote try error "test/missing.leo (No such file or directory)"
+  is equal quote try error "test/missing.leo (No such file or directory)"

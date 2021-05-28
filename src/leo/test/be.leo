@@ -1,4 +1,4 @@
 test
   ugly
   be pretty
-  equals pretty
+  is equal pretty

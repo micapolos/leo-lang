@@ -33,7 +33,7 @@ let
 
 test
   "Hello, world!".length
-  equals length 13
+  is equal length 13
 
 let
   text any
@@ -48,4 +48,4 @@ let
 test
   "Hello, "
   append "world!"
-  equals "Hello, world!"
+  is equal "Hello, world!"

@@ -237,12 +237,12 @@ inline fun Interpreter.plusIsOrNullLeo(rhs: Script): Leo<Interpreter?> =
 		when (field.string) {
 			equalName -> plusIsEqualLeo(field.rhs)
 			matchingName -> plusIsMatchingLeo(field.rhs)
-			else -> leo
+			else -> leo(null)
 		}
 	}
 
 inline fun Interpreter.plusIsMatchingLeo(rhs: Script): Leo<Interpreter> =
-	setLeo(value.is_(pattern(rhs)))
+	setLeo(value.isMatching(pattern(rhs)))
 
 inline fun Interpreter.plusCommentLeo(rhs: Script): Leo<Interpreter> =
 	leo

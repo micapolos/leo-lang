@@ -3,7 +3,7 @@ test
   switch
     circle red
     rectangle blue
-  equals
+  is equal
     red circle radius
 
 test
@@ -11,7 +11,7 @@ test
   switch
     circle red
     rectangle blue
-  equals
+  is equal
     blue rectangle side
 
 test
@@ -20,4 +20,4 @@ test
     switch
       circle red
       rectangle blue
-  equals quote try error nonexaustive
+  is equal quote try error nonexaustive

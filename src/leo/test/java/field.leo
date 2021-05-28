@@ -3,4 +3,4 @@ test
   field "TYPE"
   as field java any
   quote
-  equals field java native "public static final java.lang.Class java.lang.Integer.TYPE"
+  is equal field java native "public static final java.lang.Class java.lang.Integer.TYPE"

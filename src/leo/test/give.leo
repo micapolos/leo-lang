@@ -5,6 +5,6 @@ test
   give
     x 10
     y 20
-  equals
+  is equal
     x 10
     and y 20
