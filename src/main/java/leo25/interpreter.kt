@@ -90,8 +90,7 @@ inline fun Interpreter.plusStaticOrNullLeo(scriptField: ScriptField): Leo<Interp
 		exampleName -> plusExampleLeo(scriptField.rhs)
 		failName -> plusFailLeo(scriptField.rhs)
 		hashName -> plusHashOrNullLeo(scriptField.rhs)
-		isName -> plusIsLeo(scriptField.rhs)
-		equalsName -> plusEqualsLeo(scriptField.rhs)
+		isName -> plusIsOrNullLeo(scriptField.rhs)
 		privateName -> plusPrivateLeo(scriptField.rhs)
 		quoteName -> plusQuoteLeo(scriptField.rhs)
 		setName -> plusSetLeo(scriptField.rhs)
@@ -159,16 +158,18 @@ inline fun Interpreter.plusFailLeo(rhs: Script): Leo<Interpreter> =
 	else leo.also { value.throwError() }
 
 inline fun Interpreter.plusTestLeo(test: Script): Leo<Interpreter> =
-	test.matchInfix(equalsName) { lhs, rhs ->
-		dictionary.valueLeo(lhs).bind { lhs ->
-			dictionary.valueLeo(rhs).bind { rhs ->
-				if (lhs.equals(rhs)) leo
-				else leo.also {
-					value(testName fieldTo test.value)
-						.plus(
-							causeName fieldTo
-								lhs.plus(notName fieldTo value(equalsName fieldTo rhs))
-						).throwError()
+	test.matchInfix(isName) { lhs, rhs ->
+		rhs.matchPrefix(equalName) { rhs ->
+			dictionary.valueLeo(lhs).bind { lhs ->
+				dictionary.valueLeo(rhs).bind { rhs ->
+					if (lhs.equals(rhs)) leo
+					else leo.also {
+						value(testName fieldTo test.value)
+							.plus(
+								causeName fieldTo
+									lhs.plus(isName fieldTo value(notName fieldTo value(equalName fieldTo rhs)))
+							).throwError()
+					}
 				}
 			}
 		}
@@ -183,9 +184,9 @@ inline fun Interpreter.plusHashOrNullLeo(rhs: Script): Leo<Interpreter?> =
 	if (rhs.isEmpty) setLeo(value.hashValue)
 	else leo(null)
 
-inline fun Interpreter.plusEqualsLeo(rhs: Script): Leo<Interpreter?> =
+inline fun Interpreter.plusIsEqualLeo(rhs: Script): Leo<Interpreter?> =
 	dictionary.valueLeo(rhs).bind {
-		setLeo(value.equals(it).equalsValue)
+		setLeo(value.equals(it).isValue)
 	}
 
 inline fun Interpreter.plusQuoteLeo(rhs: Script): Leo<Interpreter> =
@@ -231,7 +232,16 @@ inline fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 inline fun Interpreter.plusAsLeo(rhs: Script): Leo<Interpreter> =
 	setLeo(value.as_(pattern(rhs)))
 
-inline fun Interpreter.plusIsLeo(rhs: Script): Leo<Interpreter> =
+inline fun Interpreter.plusIsOrNullLeo(rhs: Script): Leo<Interpreter?> =
+	rhs.onlyLineOrNull?.fieldOrNull.leo.nullableBind { field ->
+		when (field.string) {
+			equalName -> plusIsEqualLeo(field.rhs)
+			matchingName -> plusIsMatchingLeo(field.rhs)
+			else -> leo
+		}
+	}
+
+inline fun Interpreter.plusIsMatchingLeo(rhs: Script): Leo<Interpreter> =
 	setLeo(value.is_(pattern(rhs)))
 
 inline fun Interpreter.plusCommentLeo(rhs: Script): Leo<Interpreter> =

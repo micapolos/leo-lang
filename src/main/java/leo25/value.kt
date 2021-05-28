@@ -200,7 +200,7 @@ val Value.numberOrNull: Number?
 val Value.numberOrThrow: Number
 	get() =
 		numberOrNull.notNullOrThrow {
-			plus(equalsName fieldTo value("not" fieldTo value(numberName)))
+			plus(isName fieldTo value(equalName fieldTo value("not" fieldTo value(numberName))))
 		}
 
 val Value.isEmpty: Boolean
@@ -267,13 +267,9 @@ fun Value.resolveEmptyOrNull(fn: () -> Value?): Value? =
 		fn()
 	}
 
-val Boolean.equalsValue
+val Boolean.isValue
 	get() =
-		value(equalsName fieldTo yesNoValue)
-
-val Boolean.yesNoValue
-	get() =
-		value(if (this) yesName else noName)
+		value(isName fieldTo value(if (this) yesName else noName))
 
 val Value.hashValue
 	get() =
@@ -320,7 +316,7 @@ fun Value.is_(pattern: Pattern): Value =
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
 		?.bindingOrNull
-		.let { value(isName fieldTo (it != null).yesNoValue) }
+		.let { (it != null).isValue }
 
 val Value.resolveNameOrNull: Value?
 	get() =
