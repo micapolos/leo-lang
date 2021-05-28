@@ -1,1 +1,4 @@
-"Hello, world!"
+use library text
+
+"Hello, "
+append "world!"
