@@ -72,7 +72,7 @@ test
 
 let
   number any
-  less than number any
+  is less than number any
   do
     "leo25.natives.NumberKt".class.java.class
     method
@@ -85,29 +85,26 @@ let
       null.java
       args
         element number.java
-        element less.than.number.java
+        element is.less.than.number.java
         array.java
     do
       java
       is equal true.java
-      switch
-        yes less
-        no less
 
 test
   5
-  less than 6
-  is equal less yes
+  is less than 6
+  is equal is yes
 
 test
   5
-  less than 5
-  is equal less no
+  is less than 5
+  is equal is no
 
 test
   5
-  less than 4
-  is equal less no
+  is less than 4
+  is equal is no
 
 let
   number any

@@ -7,7 +7,7 @@ test
   16
   do recursing
     number
-    less than 2
+    is less than 2
     switch
       yes do number
       no do
