@@ -10,7 +10,7 @@ import leo25.fieldTo
 import leo25.value
 import kotlin.test.Test
 
-class ParserAndLocationTest {
+class LocatingParserTest {
 	@Test
 	fun success() {
 		scriptParser.parseOrThrow("foo\n").assertEqualTo(script("foo"))

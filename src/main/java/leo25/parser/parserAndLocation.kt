@@ -5,25 +5,25 @@ import leo.base.fold
 import leo25.throwError
 import leo25.value
 
-data class ParserAndLocation<T>(
+data class LocatingParser<T>(
 	val location: Location,
 	val parser: Parser<T>
 )
 
-fun <T> ParserAndLocation<T>.plus(char: Char): ParserAndLocation<T> =
-	ParserAndLocation(
+fun <T> LocatingParser<T>.plus(char: Char): LocatingParser<T> =
+	LocatingParser(
 		if (char == '\n') location.newLine else location.nextColumn,
 		parser.plus(char) ?: throwParserError()
 	)
 
-fun <T> ParserAndLocation<T>.plus(string: String): ParserAndLocation<T> =
+fun <T> LocatingParser<T>.plus(string: String): LocatingParser<T> =
 	fold(string.charSeq) { plus(it) }
 
-fun <T, O> ParserAndLocation<T>.throwParserError(): O =
+fun <T, O> LocatingParser<T>.throwParserError(): O =
 	location.script.value.throwError()
 
 fun <T> Parser<T>.parseOrThrow(string: String): T =
-	ParserAndLocation(startLocation, this)
+	LocatingParser(startLocation, this)
 		.plus(string)
 		.run { parser.parsedOrNull ?: throwParserError() }
 
