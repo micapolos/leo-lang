@@ -157,6 +157,8 @@ inline fun Interpreter.plusFailLeo(rhs: Script): Leo<Interpreter> =
 	if (!rhs.isEmpty) value(syntaxName).throwError()
 	else leo.also { value.throwError() }
 
+// TODO: Refactor to check that the test contains code which evaluates to "is yes / is no",
+// and allow using any check.
 inline fun Interpreter.plusTestLeo(test: Script): Leo<Interpreter> =
 	test.matchInfix(isName) { lhs, rhs ->
 		rhs.matchPrefix(equalName) { rhs ->

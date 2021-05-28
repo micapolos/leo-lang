@@ -3,4 +3,4 @@ test
   element "world!".java
   array.java
   is matching java any
-  is equal quote is yes
+  is equal is yes
