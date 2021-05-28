@@ -25,7 +25,7 @@ fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
 	Dictionary(tokenToResolutionMap.put(token to resolution))
 
 fun dictionary(vararg pairs: Pair<Token, Resolution>): Dictionary =
-	Dictionary(emptyDict()).fold(pairs) { put(it.first, it.second) }
+	Dictionary(dict()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -55,8 +55,8 @@ val Dictionary.removeForAny: Dictionary
 	get() =
 		Dictionary(
 			tokenToResolutionMap.get(token(anyEnd)).let { resolutionOrNull ->
-				if (resolutionOrNull == null) emptyDict()
-				else emptyDict<Token, Resolution>().put(token(anyEnd) to resolutionOrNull)
+				if (resolutionOrNull == null) dict()
+				else dict<Token, Resolution>().put(token(anyEnd) to resolutionOrNull)
 			})
 
 val Resolution.continuationDictionary: Dictionary
