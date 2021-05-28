@@ -30,7 +30,7 @@ Add `leo-lang\bin` to your `$PATH`.
 `cd` to the root directory containing all Leonardo libraries.
 
 ```
-cd leo
+cd src/leo
 ```
 
 Edit `sandbox.leo` and run:
