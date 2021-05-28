@@ -10,7 +10,7 @@ import leo25.fieldTo
 import leo25.value
 import kotlin.test.Test
 
-class ParsingTest {
+class ParserAndLocationTest {
 	@Test
 	fun success() {
 		scriptParser.parseOrThrow("foo\n").assertEqualTo(script("foo"))
@@ -24,8 +24,10 @@ class ParsingTest {
 		} catch (e: ValueError) {
 			e.value.assertEqualTo(
 				value(
-					"line" fieldTo value(field(literal(4))),
-					"column" fieldTo value(field(literal(6)))
+					"location" fieldTo value(
+						"line" fieldTo value(field(literal(4))),
+						"column" fieldTo value(field(literal(6)))
+					)
 				)
 			)
 		}
