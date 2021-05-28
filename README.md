@@ -23,7 +23,7 @@ gradle jar
 
 ##### Installing
 
-Copy `bin/leo` to `usr/local/bin` or some other directory which is on your `$PATH`.
+Add `leo-lang\bin` to your `$PATH`.
 
 ##### Running
 
