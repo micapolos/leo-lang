@@ -1,10 +1,17 @@
 # leo-lang
+
 Leonardo programming language.
 
 ##### Getting
 
 ```
 git clone https://github.com/micapolos/leo-lang.git
+```
+
+##### Updating
+
+```
+git pull
 ```
 
 ##### Building with Gradle
@@ -14,16 +21,34 @@ cd leo-lang
 gradle jar
 ```
 
+##### Installing
+
+Copy `bin/leo` to `usr/local/bin` or some other directory which is on your `$PATH`.
+
 ##### Running
 
-Leonardo reads from standard input and writes to standard output, and requires Java JRE:
+`cd` to the root directory containing all Leonardo libraries.
 
 ```
-bin/leo < my_file.leo
+cd leo
 ```
 
-##### Updating
+Edit `sandbox.leo` and run:
 
 ```
-git pull
+leo sandbox
+```
+
+Or... create new `.leo` file in any sub-directory (in example `micapolos\examples\main.leo`), and run it from there:
+
+```
+leo micapolos example main
+```
+
+##### Testing
+
+Runs all Leonardo tests:
+
+```
+leo test all
 ```
