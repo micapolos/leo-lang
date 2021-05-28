@@ -289,3 +289,40 @@ val stringParser: Parser<String>
 fun Parser<Unit>.repeat(times: Int): Parser<Unit> =
 	if (times <= 0) Unit.parser()
 	else bind { repeat(times.dec()) }
+
+val <T> Parser<T>.withoutEmptyLines get() = withoutEmptyLines(true)
+
+fun <T> Parser<T>.withoutEmptyLines(isLineStart: Boolean): Parser<T> =
+	Parser(
+		{ char ->
+			if (char == '\n')
+				if (isLineStart) withoutEmptyLines(true)
+				else plus(char)?.withoutEmptyLines(true)
+			else plus(char)?.withoutEmptyLines(false)
+		}, {
+			parsedOrNull
+		})
+
+val <T> Parser<T>.withoutTrailingSpaces get() = withoutTrailingSpaces(0)
+
+fun <T> Parser<T>.withoutTrailingSpaces(trailingSpaceCount: Int): Parser<T> =
+	Parser(
+		{ char ->
+			when (char) {
+				'\n' -> plus(char)?.withoutTrailingSpaces(0)
+				' ' -> withoutTrailingSpaces(trailingSpaceCount.inc())
+				else -> orNull.iterate(trailingSpaceCount) { this?.plus(' ') }?.plus(char)?.withoutTrailingSpaces(0)
+			}
+		}, {
+			parsedOrNull
+		})
+
+val <T> Parser<T>.addingMissingNewline get() = addingMissingNewline(needsNewline = false)
+
+fun <T> Parser<T>.addingMissingNewline(needsNewline: Boolean): Parser<T> =
+	Parser(
+		{ char ->
+			plus(char)?.addingMissingNewline(needsNewline = char != '\n')
+		}, {
+			orNull.runIf(needsNewline) { this?.plus('\n') }?.parsedOrNull
+		})

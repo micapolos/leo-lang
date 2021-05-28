@@ -205,4 +205,32 @@ class ParserTest {
 		2.maxIndentUnitParser.parsed("     ").assertEqualTo(null)
 		2.maxIndentUnitParser.parsed("      ").assertEqualTo(null)
 	}
+
+	@Test
+	fun withoutEmptyLines() {
+		stringParser.withoutEmptyLines.run {
+			parsed("foo").assertEqualTo("foo")
+			parsed("foo\nbar").assertEqualTo("foo\nbar")
+			parsed("foo\n\nbar").assertEqualTo("foo\nbar")
+		}
+	}
+
+	@Test
+	fun withoutTrailingSpaces() {
+		stringParser.withoutTrailingSpaces.run {
+			parsed("  foo bar  ").assertEqualTo("  foo bar")
+			parsed("foo bar\n  \nzoo zar  ").assertEqualTo("foo bar\n\nzoo zar")
+		}
+	}
+
+	@Test
+	fun addingMissingNewline() {
+		stringParser.addingMissingNewline.run {
+			parsed("").assertEqualTo("")
+			parsed("foo").assertEqualTo("foo\n")
+			parsed("foo\n").assertEqualTo("foo\n")
+			parsed("foo\nbar").assertEqualTo("foo\nbar\n")
+			parsed("foo\nbar\n").assertEqualTo("foo\nbar\n")
+		}
+	}
 }

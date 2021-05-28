@@ -3,7 +3,7 @@ package leo25
 import leo.base.*
 import leo14.Literal
 
-val Notation.string get() = appendableString { it.append(this) }.addTrailingNewline
+val Notation.string get() = appendableString { it.append(this) }.addMissingNewline
 
 fun Appendable.append(notation: Notation): Appendable =
 	indented.append(notation).appendable

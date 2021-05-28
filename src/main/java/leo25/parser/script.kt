@@ -8,6 +8,9 @@ import leo25.NameAtom
 
 // TODO: Implement Notation parser instead, and convert to Script.
 
+val preprocessingScriptParser: Parser<Script> =
+	scriptParser.withoutTrailingSpaces.withoutEmptyLines.addingMissingNewline
+
 val scriptParser: Parser<Script>
 	get() =
 		scriptBlockParser.stackParser.map {

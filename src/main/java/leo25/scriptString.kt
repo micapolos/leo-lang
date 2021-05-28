@@ -8,19 +8,11 @@ val Script.string
 
 val String.preprocess: String
 	get() =
-		this
-			.convertTabsToSpaces
-			.lines()
-			.map { it.trimEnd() }
-			.joinToString("\n")
-			.removeEmptyLines
-			.addTrailingNewline
-
-val String.removeEmptyLines get() = replace(Regex("(?m)^[ \t]*\r?\n"), "")
+		convertTabsToSpaces
 
 val String.convertTabsToSpaces get() = replace("\t", "  ")
 
-val String.addTrailingNewline
+val String.addMissingNewline
 	get() =
 		if (isEmpty() || this[length - 1] == '\n') this
 		else plus('\n')
