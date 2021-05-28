@@ -28,4 +28,3 @@ use test value
 use test with
 
 use test java all
-use test parser all
