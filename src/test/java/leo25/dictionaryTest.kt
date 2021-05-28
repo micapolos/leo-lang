@@ -18,7 +18,7 @@ class DictionaryTest {
 				)
 			)
 			.assertEqualTo(
-				Dictionary(persistentMapOf(token(anyEnd) to resolution(binding(value("ok")))))
+				dictionary(token(anyEnd) to resolution(binding(value("ok"))))
 			)
 	}
 

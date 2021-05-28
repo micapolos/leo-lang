@@ -16,7 +16,7 @@ fun Dictionary.applyOrNullLeo(value: Value): Leo<Value?> =
 	resolutionOrNull(value)?.bindingOrNull?.applyLeo(value) ?: leo(null)
 
 inline fun Dictionary.resolutionOrNull(token: Token): Resolution? =
-	tokenToResolutionMap[token]
+	tokenToResolutionMap.get(token)
 
 fun Dictionary.resolutionOrNull(value: Value): Resolution? =
 	null

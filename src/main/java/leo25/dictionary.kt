@@ -1,12 +1,10 @@
 package leo25
 
-import kotlinx.collections.immutable.PersistentMap
-import kotlinx.collections.immutable.persistentHashMapOf
 import leo.base.*
 import leo14.*
 import leo14.matching.name
 
-data class Dictionary(val tokenToResolutionMap: PersistentMap<Token, Resolution>)
+data class Dictionary(val tokenToResolutionMap: Dict<Token, Resolution>)
 
 sealed class Token
 data class BeginToken(val begin: Begin) : Token()
@@ -24,10 +22,10 @@ data class ResolverResolution(val dictionary: Dictionary) : Resolution()
 data class BindingResolution(val binding: Binding) : Resolution()
 
 fun Dictionary.put(token: Token, resolution: Resolution): Dictionary =
-	Dictionary(tokenToResolutionMap.put(token, resolution))
+	Dictionary(tokenToResolutionMap.put(token to resolution))
 
 fun dictionary(vararg pairs: Pair<Token, Resolution>): Dictionary =
-	Dictionary(persistentHashMapOf()).fold(pairs) { put(it.first, it.second) }
+	Dictionary(emptyDict()).fold(pairs) { put(it.first, it.second) }
 
 fun token(begin: Begin): Token = BeginToken(begin)
 fun token(end: End): Token = EndToken(end)
@@ -41,10 +39,10 @@ fun resolution(dictionary: Dictionary): Resolution = ResolverResolution(dictiona
 fun resolution(binding: Binding): Resolution = BindingResolution(binding)
 
 inline fun Dictionary.update(token: Token, fn: (Resolution?) -> Resolution?): Dictionary =
-	fn(tokenToResolutionMap[token]).let { resolutionOrNull ->
+	fn(tokenToResolutionMap.get(token)).let { resolutionOrNull ->
 		Dictionary(
 			if (resolutionOrNull == null) tokenToResolutionMap.remove(token)
-			else tokenToResolutionMap.put(token, resolutionOrNull)
+			else tokenToResolutionMap.put(token to resolutionOrNull)
 		)
 	}
 
@@ -56,9 +54,9 @@ inline fun Dictionary.updateContinuation(token: Token, fn: Dictionary.() -> Reso
 val Dictionary.removeForAny: Dictionary
 	get() =
 		Dictionary(
-			tokenToResolutionMap[token(anyEnd)].let { resolutionOrNull ->
-				if (resolutionOrNull == null) persistentHashMapOf()
-				else persistentHashMapOf(token(anyEnd) to resolutionOrNull)
+			tokenToResolutionMap.get(token(anyEnd)).let { resolutionOrNull ->
+				if (resolutionOrNull == null) emptyDict()
+				else emptyDict<Token, Resolution>().put(token(anyEnd) to resolutionOrNull)
 			})
 
 val Resolution.continuationDictionary: Dictionary
@@ -121,7 +119,7 @@ inline fun Dictionary.updateAny(fn: Dictionary.() -> Resolution): Dictionary =
 operator fun Dictionary.plus(dictionary: Dictionary): Dictionary =
 	runIf(dictionary.resolutionOrNull(token(anyEnd)) != null) { removeForAny }
 		.run {
-			dictionary.tokenToResolutionMap.entries.fold(this) { dictionary, (token, resolution) ->
+			dictionary.tokenToResolutionMap.pairSeq.fold(this) { dictionary, (token, resolution) ->
 				dictionary.update(token) { resolutionOrNull ->
 					resolutionOrNull.orNullMerge(resolution)
 				}
