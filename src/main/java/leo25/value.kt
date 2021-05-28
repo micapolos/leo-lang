@@ -28,6 +28,13 @@ fun rhs(function: Function): Rhs = FunctionRhs(function)
 fun rhs(native: Native): Rhs = NativeRhs(native)
 
 val Rhs.valueOrNull: Value? get() = (this as? ValueRhs)?.value
+val Rhs.valueOrThrow: Value
+	get() = valueOrNull.notNullOrThrow {
+		value(
+			"rhs" fieldTo this,
+			isName fieldTo value(notName fieldTo value(valueName))
+		)
+	}
 val Rhs.functionOrNull: Function? get() = (this as? FunctionRhs)?.function
 val Rhs.nativeOrNull: Native? get() = (this as? NativeRhs)?.native
 
