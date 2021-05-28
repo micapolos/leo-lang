@@ -6,10 +6,12 @@ import leo14.*
 import leo25.LiteralAtom
 import leo25.NameAtom
 
-// TODO: Implement Notation parser instead, and convert to Script.
-
 val preprocessingScriptParser: Parser<Script> =
-	scriptParser.withoutTrailingSpaces.withoutEmptyLines.addingMissingNewline
+	scriptParser.preprocessing
+
+val <T> Parser<T>.preprocessing: Parser<T>
+	get() =
+		withoutTrailingSpaces.withoutEmptyLines.addingMissingNewline
 
 val scriptParser: Parser<Script>
 	get() =
