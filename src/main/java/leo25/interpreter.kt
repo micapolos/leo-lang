@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.*
+import leo13.base.negate
 import leo14.*
 import leo25.natives.nativeDictionary
 import leo25.parser.scriptOrThrow
@@ -219,9 +220,9 @@ inline fun Interpreter.plusHashOrNullLeo(rhs: Rhs): Leo<Interpreter?> =
 	if (rhs.valueOrNull?.isEmpty == true) setLeo(value.hashValue)
 	else leo(null)
 
-inline fun Interpreter.plusIsEqualLeo(rhs: Script): Leo<Interpreter?> =
+inline fun Interpreter.plusIsEqualLeo(rhs: Script, negate: Boolean): Leo<Interpreter?> =
 	dictionary.valueLeo(rhs).bind {
-		setLeo(value.equals(it).isValue)
+		setLeo(value.equals(it).isValue(negate))
 	}
 
 inline fun Interpreter.plusQuoteLeo(rhs: Script): Leo<Interpreter> =
@@ -269,17 +270,18 @@ inline fun Interpreter.plusLeo(field: Field): Leo<Interpreter> =
 inline fun Interpreter.plusAsLeo(rhs: Script): Leo<Interpreter> =
 	setLeo(value.as_(pattern(rhs)))
 
-inline fun Interpreter.plusIsOrNullLeo(rhs: Script): Leo<Interpreter?> =
+fun Interpreter.plusIsOrNullLeo(rhs: Script, negate: Boolean = false): Leo<Interpreter?> =
 	rhs.onlyLineOrNull?.fieldOrNull.leo.nullableBind { field ->
 		when (field.string) {
-			equalName -> plusIsEqualLeo(field.rhs)
-			matchingName -> plusIsMatchingLeo(field.rhs)
+			equalName -> plusIsEqualLeo(field.rhs, negate)
+			matchingName -> plusIsMatchingLeo(field.rhs, negate)
+			notName -> plusIsOrNullLeo(field.rhs, negate.negate)
 			else -> leo(null)
 		}
 	}
 
-inline fun Interpreter.plusIsMatchingLeo(rhs: Script): Leo<Interpreter> =
-	setLeo(value.isMatching(pattern(rhs)))
+inline fun Interpreter.plusIsMatchingLeo(rhs: Script, negate: Boolean): Leo<Interpreter> =
+	setLeo(value.isMatching(pattern(rhs), negate))
 
 inline fun Interpreter.plusCommentLeo(rhs: Script): Leo<Interpreter> =
 	leo

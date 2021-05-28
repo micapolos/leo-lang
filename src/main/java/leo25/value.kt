@@ -1,6 +1,7 @@
 package leo25
 
 import leo.base.*
+import leo13.base.negate
 import leo14.*
 import leo14.Number
 
@@ -278,6 +279,9 @@ val Boolean.isValue
 	get() =
 		value(isName fieldTo value(if (this) yesName else noName))
 
+fun Boolean.isValue(negated: Boolean) =
+	runIf(negated) { negate }.isValue
+
 val Value.hashValue
 	get() =
 		value(hashName fieldTo value(field(literal(hashCode()))))
@@ -318,12 +322,12 @@ fun Value.as_(pattern: Pattern): Value =
 		?.let { this }
 		.notNullOrThrow { plus(value(asName fieldTo pattern.script.value)) }
 
-fun Value.isMatching(pattern: Pattern): Value =
+fun Value.isMatching(pattern: Pattern, negate: Boolean = false): Value =
 	dictionary()
 		.plus(definition(pattern, binding(this)))
 		.resolutionOrNull(this)
 		?.bindingOrNull
-		.let { (it != null).isValue }
+		.let { (it != null).isValue(negate) }
 
 val Value.resolveNameOrNull: Value?
 	get() =

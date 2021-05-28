@@ -492,7 +492,7 @@ class InterpreterTest {
 	}
 
 	@Test
-	fun equals_() {
+	fun isEqual() {
 		script(
 			"foo" lineTo script(),
 			isName lineTo script(equalName lineTo script("foo"))
@@ -513,6 +513,33 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(isName lineTo script(yesName)))
+	}
+
+	@Test
+	fun isNotEqual() {
+		script(
+			"foo" lineTo script(),
+			isName lineTo script(notName lineTo script(equalName lineTo script("bar")))
+		)
+			.interpret
+			.assertEqualTo(script(isName lineTo script(yesName)))
+	}
+
+
+	@Test
+	fun isNotNotEqual() {
+		script(
+			"foo" lineTo script(),
+			isName lineTo script(
+				notName lineTo script(
+					notName lineTo script(
+						equalName lineTo script("bar")
+					)
+				)
+			)
+		)
+			.interpret
+			.assertEqualTo(script(isName lineTo script(noName)))
 	}
 
 	@Test
@@ -633,6 +660,31 @@ class InterpreterTest {
 		)
 			.interpret
 			.assertEqualTo(script(isName lineTo script(noName)))
+	}
+
+	@Test
+	fun isNotMatching() {
+		script(
+			line(literal("foo")),
+			isName lineTo script(
+				notName lineTo script(
+					matchingName lineTo script(textName lineTo script(anyName))
+				)
+			)
+		)
+			.interpret
+			.assertEqualTo(script(isName lineTo script(noName)))
+
+		script(
+			line(literal("doo")),
+			isName lineTo script(
+				notName lineTo script(
+					matchingName lineTo script(numberName lineTo script(anyName))
+				)
+			)
+		)
+			.interpret
+			.assertEqualTo(script(isName lineTo script(yesName)))
 	}
 
 	@Test
