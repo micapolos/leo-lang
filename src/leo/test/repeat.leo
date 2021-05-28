@@ -18,8 +18,7 @@ test
         switch
           yes do second.number
           no do
-            number
-            minus 1
+            number.decrement
             first second.number
             second
               first.number

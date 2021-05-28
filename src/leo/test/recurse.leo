@@ -11,11 +11,6 @@ test
     switch
       yes do number
       no do
-        number
-        minus 2
-        recurse
-        plus
-          number
-          minus 1
-          recurse
+        number.decrement.decrement.recurse
+        plus number.decrement.recurse
   is equal 987
