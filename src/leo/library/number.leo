@@ -72,6 +72,45 @@ test
 
 let
   number any
+  less than number any
+  do
+    "leo25.natives.NumberKt".class.java.class
+    method
+      "lessThan"
+      args
+        element "leo14.Number".class.java
+        element "leo14.Number".class.java
+        array.java
+    invoke
+      null.java
+      args
+        element number.java
+        element less.than.number.java
+        array.java
+    do
+      java
+      equals true.java
+      switch
+        yes less
+        no less
+
+test
+  5
+  less than 6
+  equals less yes
+
+test
+  5
+  less than 5
+  equals less no
+
+test
+  5
+  less than 4
+  equals less no
+
+let
+  number any
   increment
   do
     number

@@ -64,6 +64,9 @@ operator fun Number.minus(number: Number) =
 operator fun Number.times(number: Number) =
 	number(bigDecimal * number.bigDecimal)
 
+operator fun Number.compareTo(number: Number) =
+	bigDecimal.compareTo(number.bigDecimal)
+
 fun Number.isEqualTo(number: Number) =
 	equals(number)
 

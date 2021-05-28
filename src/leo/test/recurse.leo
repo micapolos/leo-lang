@@ -7,20 +7,15 @@ test
   16
   do recursing
     number
-    equals 0
+    less than 2
     switch
-      yes do 0
+      yes do number
       no do
         number
-        equals 1
-        switch
-          yes do 1
-          no do
-            number
-            minus 2
-            recurse
-            plus
-              number
-              minus 1
-              recurse
+        minus 2
+        recurse
+        plus
+          number
+          minus 1
+          recurse
   equals 987
